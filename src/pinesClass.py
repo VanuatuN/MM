@@ -8,11 +8,14 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from mlxtend.plotting import plot_decision_regions
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report, \
+                            confusion_matrix
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Exploratory Data Analysis (EDA)
 from sklearn.decomposition import PCA
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, \
+                                          QuadraticDiscriminantAnalysis
 
 # Random Forest (RF)
 from sklearn.ensemble import RandomForestClassifier
@@ -20,7 +23,7 @@ from sklearn.ensemble import RandomForestClassifier
 # Logistic Regression (LogR)
 from sklearn.linear_model import LogisticRegression
 
-# 
+# Gaussian Naive Bayes (GNB)
 from sklearn.naive_bayes import GaussianNB
 
 # 
@@ -37,6 +40,11 @@ DATASET_PATH = os.path.join(DATA_PATH, "Indian_pines_corrected.mat")
 DATASET_NAME = "indian_pines_corrected"
 
 myDPI = 96
+
+def clean():
+  for file in os.listdir(DATA_PATH):
+    if file.endswith(".pkl") or file.endswith(".json"):
+      os.remove(os.path.join(DATA_PATH, file))
 
 def restricted_float(x):
   try:
@@ -62,6 +70,30 @@ parser.add_argument("--pca", type=int, required=False, default=42,
                     choices=range(0, 201), metavar="[0-200]",
                     help="Enable Principal Component Analysis (PCA) with n "
                          "components. Default: 42")
+parser.add_argument("--lda", required=False, default=False,
+                    action="store_true",
+                    help="Flag which enables to run Linear Discrimination "
+                         "Analysis (LDA) after PCA in a sequential order.")
+parser.add_argument("--qda", required=False, default=False,
+                    action="store_true",
+                    help="Flag which enables to run Quadratic Discrimination "
+                         "Analysis (QDA) after LDA in a sequential order.")
+parser.add_argument("--RF", required=False, default=False,
+                    action="store_true",
+                    help="Flag which enables to run Random Forest (RF) after "
+                         "Data Preprocessing.")
+parser.add_argument("--LogR", required=False, default=False,
+                    action="store_true",
+                    help="Flag which enables to run Logistic Regression "
+                         "(LogR) after Data Preprocessing.")
+parser.add_argument("--SVC", required=False, default=False,
+                    action="store_true",
+                    help="Flag which enables to run SVC after Data "
+                         "Preprocessing.")
+parser.add_argument("--GNB", required=False, default=False,
+                    action="store_true",
+                    help="Flag which enables to run Gaussian Naive Bayes "
+                         "after Data Preprocessing.")
 
 # Initializing Classifiers
 #clf1 = LogisticRegression(random_state=1, solver='lbfgs')
@@ -79,14 +111,14 @@ def plt_im(y, path, name, cmap = "nipy_spectral"):
   plt.savefig(os.path.join(path, name + ".png"))
   return
 
-def sns_im(y, path:str, name:str, cmap:str = "coolwarm"):
+def sns_im(y, path: str, name: str, cmap: str = "coolwarm"):
   plt.figure(figsize=(1000/myDPI, 800/myDPI), dpi=myDPI)
   sns.heatmap(y, cmap=cmap, annot=False)
   plt.title(name)
   plt.savefig(os.path.join(path, name + ".png"), dpi=myDPI*10)
   return
 
-def plt_attr(ylabel:str = None, xlabel:str = None,
+def plt_attr(ylabel: str = None, xlabel: str = None,
              yscale: str = None, xscale: str = None):
   if xlabel is not None:
     plt.xlabel(xlabel)
@@ -99,8 +131,8 @@ def plt_attr(ylabel:str = None, xlabel:str = None,
   return
 
 # TODO: Use kwargs
-def plt_pl(y, path:str, name:str, color:str = "blue", x = None,
-           ylabel:str = None, xlabel:str = None, yscale: str = None,
+def plt_pl(y, path: str, name:str, color: str = "blue", x = None,
+           ylabel: str = None, xlabel: str = None, yscale: str = None,
            xscale: str = None):
   plt.figure(figsize=(12, 6))
   if x is None:
@@ -113,9 +145,9 @@ def plt_pl(y, path:str, name:str, color:str = "blue", x = None,
   return
 
 # TODO: Use kwargs
-def plt_sc(x, y, path:str, name:str, ylabel:str = None, xlabel:str = None,
+def plt_sc(x, y, path: str, name: str, ylabel: str = None, xlabel: str = None,
            yscale: str = None, xscale: str = None, c = None, z = None,
-           zlabel = None):
+           zlabel: str = None):
   if z is None:
     plt.scatter(x, y, c=c)
     plt_attr(ylabel, xlabel, yscale, xscale)
@@ -135,7 +167,7 @@ def main(args):
   # Exploratory Data Analysis (EDA)
   SECTION = "EDA"
   if args.force or not os.path.isfile(myDataSet):
-    # TODO: Remove all '.pkl' & '.json' files
+    clean()
     from scipy.io import loadmat
     # Load Dataset and Truth
     X = loadmat(DATASET_PATH)[DATASET_NAME]
@@ -178,18 +210,21 @@ def main(args):
     X_train = X[FEATURES]
     y_train = X[TARGET_STR]
 
-  sns_im(X.corr(), os.path.join(IMG_PATH, SECTION), "Correlation_Mtx")
-  FEATURES_RELEVANT = np.abs(X.corr()[TARGET_STR]) > 0.5
+  CORR = np.abs(X.corr())
+  sns_im(CORR, os.path.join(IMG_PATH, SECTION), "Correlation_Mtx")
+  FEATURES_RELEVANT = CORR[CORR[TARGET_STR] > 0.2]
+
+  name = ""
   if args.pca != 0:
     # Principal Component Analysis (PCA)
-    name = f"PCA_{args.pca:03}"
+    name += f"PCA_{args.pca:03}"
     myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
     if args.force or not os.path.isfile(myDataSet):
       pinesPCA = PCA(n_components=args.pca, svd_solver="full")
       pinesPCA.set_output(transform="pandas")
-      XpinesPCA = pinesPCA.fit_transform(X_train)
-      XpinesPCA.to_pickle(myDataSet)
-      PC1, PC2, PC3 = XpinesPCA[
+      X_train = pinesPCA.fit_transform(X_train)
+      X_train.to_pickle(myDataSet)
+      PC1, PC2, PC3 = X_train[
                         pinesPCA.get_feature_names_out()[:3]].to_numpy().T
       plt_pl(pinesPCA.explained_variance_ratio_,
              os.path.join(IMG_PATH, SECTION), name + "_VarExp", yscale="log",
@@ -200,15 +235,61 @@ def main(args):
              ylabel="Principal Component 2",
              zlabel="Principal Component 3")
     else:
-      XpinesPCA = pd.read_pickle(myDataSet)
+      X_train = pd.read_pickle(myDataSet)
+      print(X_train)
 
   else:
+    # Do not apply PCA
     pass
 
-  # Linear Discrimination Analysis (LDA)
-  pinesLDA = LinearDiscriminantAnalysis().set_output(transform="pandas")
-  XpinesLDA = pinesLDA.fit_transform(X_train, y_train)
-  print(XpinesLDA)
+  if args.lda:
+    # Linear Discrimination Analysis (LDA)
+    if name == "":
+      name += "LDA"
+    else:
+      name += "_LDA"
+    myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
+    if args.force or not os.path.isfile(myDataSet):
+      pinesLDA = LinearDiscriminantAnalysis().set_output(transform="pandas")
+      X_train = pinesLDA.fit_transform(X_train, y_train)
+      X_train.to_pickle(myDataSet)
+      LC1, LC2, LC3 = X_train[
+                        pinesLDA.get_feature_names_out()[:3]].to_numpy().T
+      plt_sc(PC1, PC2, os.path.join(IMG_PATH, SECTION),
+             name + "_" + TARGET_STR, c=y_train, z=PC3,
+             xlabel="Linear Component 1",
+             ylabel="Linear Component 2",
+             zlabel="Linear Component 3")
+    else:
+      X_train = pd.read_pickle(myDataSet)
+      print(X_train)
+
+
+  if args.qda:
+    # Quadratic Discrimination Analysis (QDA)
+    if name == "":
+      name += "QDA"
+    else:
+      name += "_QDA"
+    myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
+    if args.force or not os.path.isfile(myDataSet):
+      pinesQDA = QuadraticDiscriminantAnalysis().set_output(transform="pandas")
+      X_train = pinesQDA.fit_transform(X_train, y_train)
+      print(X_train)
+    pass
+
+  if args.RF:
+    pass
+
+  if args.SVC:
+    pass
+
+  if args.LogR:
+    pass
+
+  if args.GNB:
+    pass
+
   return
 
 if __name__ == "__main__": main(parser.parse_args())
