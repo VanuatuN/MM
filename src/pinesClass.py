@@ -27,7 +27,7 @@ from sklearn.linear_model import LogisticRegression
 # Gaussian Naive Bayes (GNB)
 from sklearn.naive_bayes import GaussianNB
 
-# 
+# SVM Classifier
 from sklearn.svm import SVC
 
 DATA_PATH = "../data"
@@ -318,7 +318,12 @@ def main(args):
   if args.SVC:
     #
     model_name = name + "_SVC"
-
+    # Initialize SVM classifier with a linear kernel
+    pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
+    pinesSVC.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our support vector model
+      y_pred[model_name] = pinesSVC.predict(X_test)
     pass
   if args.LogR:
     # Logistic Regression
@@ -332,6 +337,11 @@ def main(args):
   if args.GNB:
     # Gaussian Naive Bayes
     model_name = name + "_GNB"
+    pinesGNB = GaussianNB()
+    pinesGNB.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our support vector model
+      y_pred[model_name] = pinesSVC.predict(X_test)
     pass
 
   if y_pred and y_test is not None:
