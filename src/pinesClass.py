@@ -344,7 +344,7 @@ def main(args):
     pinesGNB.fit(X_train, y_train)
     if X_test is not None:
       # We now test our support vector model
-      y_pred[model_name] = pinesSVC.predict(X_test)
+      y_pred[model_name] = pinesGNB.predict(X_test)
     pass
 
   if y_pred and y_test is not None:
