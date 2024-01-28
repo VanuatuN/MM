@@ -3,13 +3,14 @@ import sys
 import json
 import argparse
 import numpy as np
+import joblib as jl
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
-                            confusion_matrix
+                            confusion_matrix, roc_curve
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Exploratory Data Analysis (EDA)
@@ -41,10 +42,30 @@ DATASET_NAME = "indian_pines_corrected"
 
 myDPI = 96
 
-def clean():
-  for file in os.listdir(DATA_PATH):
-    if file.endswith(".pkl") or file.endswith(".json"):
-      os.remove(os.path.join(DATA_PATH, file))
+PINE_NAME = [
+  'Alfalfa',
+  'Corn-notill',
+  'Corn-mintill',
+  'Corn',
+  'Grass-pasture',
+  'Grass-trees',
+  'Grass-pasture-mowed',
+  'Hay-windrowed',
+  'Oats',
+  'Soybean-notill',
+  'Soybean-mintill',
+  'Soybean-clean',
+  'Wheat','Woods',
+  'Buildings Grass Trees Drives',
+  'Stone Steel Towers'
+]
+
+def clean(path = None, exts = [".pkl", ".json"]):
+  if path is None:
+    path = DATA_PATH
+  for file in os.listdir(path):
+    if any([file.endswith(ext) for ext in exts]):
+      os.remove(os.path.join(path, file))
 
 def restricted_float(x):
   try:
@@ -66,26 +87,22 @@ parser.add_argument("-t", "--test", type=restricted_float, default=0.3,
                     help="Size ratio between Testing and Training Datasets. "
                          "If this ratio is set to zero, then the program will "
                          "Train in the entire Dataset. Default: 0.3")
+parser.add_argument("-r", "--review", action='store_true', default=False,
+                    required=False, help="Inverse output up to PCA.")
 parser.add_argument("--pca", type=int, required=False, default=42,
                     choices=range(0, 201), metavar="[0-200]",
                     help="Enable Principal Component Analysis (PCA) with n "
                          "components. Default: 42")
 parser.add_argument("--lda", required=False, default=False,
                     action="store_true",
-                    help="Flag which enables to run Linear Discrimination "
-                         "Analysis (LDA) after PCA in a sequential order.")
-parser.add_argument("--qda", required=False, default=False,
-                    action="store_true",
-                    help="Flag which enables to run Quadratic Discrimination "
-                         "Analysis (QDA) after LDA in a sequential order.")
-parser.add_argument("--RF", required=False, default=False,
-                    action="store_true",
-                    help="Flag which enables to run Random Forest (RF) after "
-                         "Data Preprocessing.")
-parser.add_argument("--LogR", required=False, default=False,
-                    action="store_true",
-                    help="Flag which enables to run Logistic Regression "
-                         "(LogR) after Data Preprocessing.")
+                    help="Enable Linear Discrimination Analysis (LDA) to be "
+                         "run after PCA.")
+parser.add_argument("--RF", required=False, default=0, type=int,
+                    help="Enable model Random Forest (RF) after Data "
+                         "Preprocessing.")
+parser.add_argument("--LogR", required=False, default=0, type=int,
+                    help="Enable Logistic Regression (LogR) after Data "
+                         "Preprocessing.")
 parser.add_argument("--SVC", required=False, default=False,
                     action="store_true",
                     help="Flag which enables to run SVC after Data "
@@ -189,19 +206,26 @@ def main(args):
       X_SHAPE = [myDict[x] for x in ['X', 'Y', 'Z']]
     FEATURES = X.columns.values[:-1]
 
-  scaler = StandardScaler()
+  scaler = StandardScaler().set_output(transform="pandas")
   if args.test != 0.0 and args.test != 1.0:
     # TRAIN + TEST
     # Standarize Dataset
     X_train, X_test, y_train, y_test = train_test_split(
       X[FEATURES], X[TARGET_STR], test_size=args.test, random_state=1,
       stratify=X[TARGET_STR])
+    pd.concat([X_test, y_test]).to_csv(os.path.join(DATA_PATH, "DataTest.csv"))
     scaler.fit(X_train)
-    X_train = pd.DataFrame(scaler.transform(X_train), columns=FEATURES)
-    X_test = pd.DataFrame(scaler.transform(X_test), columns=FEATURES)
+    jl.dump(scaler, os.path.join(DATA_PATH, "scaler.gz"))
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
   elif args.test == 1.0:
     # TEST
-    pass
+    X_train = None
+    y_train = None
+    myData = pd.read_csv(os.path.join(DATA_PATH, "DataTest.csv"))
+    scaler = jl.load(os.path.join(DATA_PATH, "scaler.gz"))
+    X_test = scaler.transform(myData[FEATURES])
+    y_test = myData[TARGET_STR]
   else:
     # TRAIN
     scaler.fit(X[FEATURES])
@@ -209,6 +233,9 @@ def main(args):
     X.to_pickle(myDataSet)
     X_train = X[FEATURES]
     y_train = X[TARGET_STR]
+    X_test = None
+    y_test = None
+
 
   CORR = np.abs(X.corr())
   sns_im(CORR, os.path.join(IMG_PATH, SECTION), "Correlation_Mtx")
@@ -217,13 +244,14 @@ def main(args):
   name = ""
   if args.pca != 0:
     # Principal Component Analysis (PCA)
+    pinesPCA = PCA(n_components=args.pca, svd_solver="full")
     name += f"PCA_{args.pca:03}"
     myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
     if args.force or not os.path.isfile(myDataSet):
-      pinesPCA = PCA(n_components=args.pca, svd_solver="full")
       pinesPCA.set_output(transform="pandas")
       X_train = pinesPCA.fit_transform(X_train)
-      X_train.to_pickle(myDataSet)
+      jl.dump(pinesPCA, os.path.join(DATA_PATH, name + ".gz"))
+      pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       PC1, PC2, PC3 = X_train[
                         pinesPCA.get_feature_names_out()[:3]].to_numpy().T
       plt_pl(pinesPCA.explained_variance_ratio_,
@@ -235,15 +263,16 @@ def main(args):
              ylabel="Principal Component 2",
              zlabel="Principal Component 3")
     else:
-      X_train = pd.read_pickle(myDataSet)
-      print(X_train)
-
-  else:
-    # Do not apply PCA
-    pass
+      myData = pd.read_pickle(myDataSet)
+      X_train = myData[[C for C in myData.columns if C != TARGET_STR]]
+      y_train = myData[TARGET_STR]
+      if X_test is not None:
+        pinesPCA = jl.load(os.path.join(DATA_PATH, name + ".gz"))
+        X_test = pinesPCA.transform(X_test)
 
   if args.lda:
     # Linear Discrimination Analysis (LDA)
+    pinesLDA = None
     if name == "":
       name += "LDA"
     else:
@@ -252,42 +281,63 @@ def main(args):
     if args.force or not os.path.isfile(myDataSet):
       pinesLDA = LinearDiscriminantAnalysis().set_output(transform="pandas")
       X_train = pinesLDA.fit_transform(X_train, y_train)
-      X_train.to_pickle(myDataSet)
+      jl.dump(pinesLDA, os.path.join(DATA_PATH, name + ".gz"))
+      pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       LC1, LC2, LC3 = X_train[
                         pinesLDA.get_feature_names_out()[:3]].to_numpy().T
-      plt_sc(PC1, PC2, os.path.join(IMG_PATH, SECTION),
-             name + "_" + TARGET_STR, c=y_train, z=PC3,
+      plt_pl(pinesLDA.explained_variance_ratio_,
+             os.path.join(IMG_PATH, SECTION), name + "_VarExp", yscale="log",
+             xlabel="Linear Components", ylabel="Variance Explained")
+      plt_sc(LC1, LC2, os.path.join(IMG_PATH, SECTION),
+             name + "_" + TARGET_STR, c=y_train, z=LC3,
              xlabel="Linear Component 1",
              ylabel="Linear Component 2",
              zlabel="Linear Component 3")
     else:
-      X_train = pd.read_pickle(myDataSet)
-      print(X_train)
+      myData = pd.read_pickle(myDataSet)
+      X_train = myData[[C for C in myData.columns if C != TARGET_STR]]
+      y_train = myData[TARGET_STR]
+      if X_test is not None:
+        pinesLDA = jl.load(os.path.join(DATA_PATH, name + ".gz"))
+        X_test = pinesLDA.transform(X_test)
 
-
-  if args.qda:
-    # Quadratic Discrimination Analysis (QDA)
-    if name == "":
-      name += "QDA"
-    else:
-      name += "_QDA"
-    myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
-    if args.force or not os.path.isfile(myDataSet):
-      pinesQDA = QuadraticDiscriminantAnalysis().set_output(transform="pandas")
-      X_train = pinesQDA.fit_transform(X_train, y_train)
-      print(X_train)
-    pass
-
+  print(X_test)
+  # WARNING: If the following assertion fails, then the Data has not been
+  #          preprocessed
+  assert name != ""
+  y_pred = dict()
+  # CLASSIFIERS
   if args.RF:
-    pass
-
+    # Random Forest
+    model_name = name + "_RF"
+    pinesRF = RandomForestClassifier(max_depth=args.RF)
+    pinesRF.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our model
+      y_pred[model_name] = pinesRF.predict(X_test)
   if args.SVC:
-    pass
+    #
+    model_name = name + "_SVC"
 
+    pass
   if args.LogR:
+    # Logistic Regression
+    model_name = name + "_LogR"
+    pinesLogR = LogisticRegression(penalty='none', fit_intercept=True,
+                                   max_iter=args.LogR, tol=1E-5)
+    pinesLogR.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our model
+      y_pred[model_name] = pinesLogR.predict(X_test)
+  if args.GNB:
+    # Gaussian Naive Bayes
+    model_name = name + "_GNB"
     pass
 
-  if args.GNB:
+  if y_pred and y_test is not None:
+    for model, pred in y_pred.items():
+      print(model)
+      print(classification_report(pred, y_test))
     pass
 
   return
