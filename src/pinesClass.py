@@ -232,7 +232,6 @@ def main(args):
     X_test = None
     y_test = None
 
-
   CORR = np.abs(X.corr())
   sns_im(CORR, os.path.join(IMG_PATH, SECTION), "Correlation_Mtx")
   FEATURES_RELEVANT = CORR[CORR[TARGET_STR] > 0.2]
@@ -330,7 +329,7 @@ def main(args):
   if args.LogR:
     # Logistic Regression
     model_name = name + "_LogR"
-    pinesLogR = LogisticRegression(penalty='none', fit_intercept=True,
+    pinesLogR = LogisticRegression(penalty=None, fit_intercept=True,
                                    max_iter=args.LogR, tol=1E-5)
     pinesLogR.fit(X_train, y_train)
     if X_test is not None:

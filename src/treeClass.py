@@ -17,8 +17,6 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
-
-
 # Logistic Regression (LogR)
 from sklearn.linear_model import LogisticRegression
 # Random Forest
@@ -40,7 +38,6 @@ DATASET_NAME = "indian_pines_corrected"
 
 myDPI = 96
 
-
 def plt_attr(ylabel: str = None, xlabel: str = None,
              yscale: str = None, xscale: str = None):
   if xlabel is not None: plt.xlabel(xlabel)
@@ -48,7 +45,6 @@ def plt_attr(ylabel: str = None, xlabel: str = None,
   if yscale is not None: plt.yscale(yscale)
   if ylabel is not None: plt.ylabel(ylabel)
   return
-
 
 def restricted_float(x):
   try:
@@ -142,7 +138,7 @@ def plt_sc(x, y, path: str, name: str, ylabel: str = None, xlabel: str = None,
   return
 
 def main(args):
-  myDataSet = os.path.join(DATA_PATH, DATASET_STR + ".pkl")
+  myDataSet = os.path.join(DATA_PATH, TARGET_STR + DATASET_STR + ".pkl")
   # Exploratory Data Analysis (EDA)
   SECTION = "EDA"
   if args.force or not os.path.isfile(myDataSet):
@@ -154,8 +150,6 @@ def main(args):
     X = pd.DataFrame(X.reshape(-1, X_SHAPE[2]), columns=FEATURES)
     X[TARGET_STR] = loadmat(TARGET_PATH)[TARGET_NAME].flatten()
     X.loc[X[TARGET_STR] != 0, TARGET_STR] = 1
-
-    #print(X)
     X[FEATURES + [TARGET_STR]].to_pickle(myDataSet)
     with open(os.path.join(DATA_PATH, "Datashape.json"), 'w') as fp:
       json.dump({x: y for x, y in zip(['X', 'Y', 'Z'], X_SHAPE)}, fp)
@@ -177,9 +171,10 @@ def main(args):
     X_train, X_test, y_train, y_test = train_test_split(
       X[FEATURES], X[TARGET_STR], test_size=args.test, random_state=1,
       stratify=X[TARGET_STR])
-    pd.concat([X_test, y_test]).to_csv(os.path.join(DATA_PATH, "DataTest.csv"))
+    pd.concat([X_test, y_test]).to_csv(
+      os.path.join(DATA_PATH, f"{TARGET_STR}_DataTest.csv"))
     scaler.fit(X_train)
-    jl.dump(scaler, os.path.join(DATA_PATH, "scaler.gz"))
+    jl.dump(scaler, os.path.join(DATA_PATH, f"{TARGET_STR}_scaler.gz"))
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
   elif args.test == 1.0:
