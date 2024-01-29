@@ -38,13 +38,13 @@ in the dataset. These anlysis allows to see the clusters in the data and quantif
 
 The PCs analysis shows that first 5 PCs expaling more the 90% of the total variability in the dataset.
 While <br>
+
 PC 1 explains XX % <br>
 PC 2 explains XX % <br>
 PC 3 explains XX % <br>
 
-
-There is also a clear clustering of the data points in PCs space, suggesting that data clusters are
-separated and can be further analyses succesfully with machine learning methods. 
+There is also a clear clustering of the data points in PCs space (Figure 2), suggesting that data clusters are
+separated and can be further analysed succesfully with machine learning methods. 
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bdf28b5c-0a2c-4b23-94bf-53932a34bddf)
 Figure 2. First 3 PCAs plotted in a 3D space. 
