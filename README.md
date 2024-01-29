@@ -86,6 +86,17 @@ Linear Discriminant Analysis <br>
 It is a technique to reduce the dimensionality and help classification, by finding the linear combinations of features that best separate the different classes in the dataset.
 It is best employed before the application of a classificaton algorithm, by maximizing the distance between the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory power of the features and the accuracy of the classification.
 
+## Classification report
+### Random Forest
+Run: python pinesClass.py -RF #
+
+### Logistic Regression (LogR)
+
+
+### Support Vector Classification (SVC)
+
+
+### Gaussian Naive Bayes (Gaussian NB)
 
 
 
