@@ -157,8 +157,8 @@ def main(args):
     FEATURES = [f"Band_{i:03}" for i in range(1, X_SHAPE[2] + 1)]
     X = pd.DataFrame(X.reshape(-1, X_SHAPE[2]), columns=FEATURES)
     X[TARGET_STR] = loadmat(TARGET_PATH)[TARGET_NAME].flatten()
-    X_nonzero = X[X[TARGET_STR]!=0]
-    X_nonzero[TARGET_STR] = np.ones(X_nonzero.shape[0])
+    X_nonzero = X[X[TARGET_STR] != 0]
+    X_nonzero.loc[:, TARGET_STR] = 1
     print(X_nonzero)
     X[FEATURES + [TARGET_STR]].to_pickle(myDataSet)
     with open(os.path.join(DATA_PATH, "Datashape.json"), 'w') as fp:
