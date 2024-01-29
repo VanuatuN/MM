@@ -204,6 +204,8 @@ def main(args):
   if args.test != 0.0 and args.test != 1.0:
     # TRAIN + TEST
     # Standarize Dataset
+    X_zeros = X[X[TARGET_STR] == 0]
+    X = X[X[TARGET_STR] != 0]
     X_train, X_test, y_train, y_test = train_test_split(
       X[FEATURES], X[TARGET_STR], test_size=args.test, random_state=1,
       stratify=X[TARGET_STR])
