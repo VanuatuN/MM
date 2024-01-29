@@ -7,6 +7,8 @@ import joblib as jl
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib 
+matplotlib.use('Agg')
 from sklearn.preprocessing import StandardScaler
 from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
@@ -15,8 +17,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Exploratory Data Analysis (EDA)
 from sklearn.decomposition import PCA
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, \
-                                          QuadraticDiscriminantAnalysis
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 # Random Forest (RF)
 from sklearn.ensemble import RandomForestClassifier
@@ -27,7 +28,7 @@ from sklearn.linear_model import LogisticRegression
 # Gaussian Naive Bayes (GNB)
 from sklearn.naive_bayes import GaussianNB
 
-# 
+# SVM Classifier
 from sklearn.svm import SVC
 
 DATA_PATH = "../data"
@@ -43,6 +44,7 @@ DATASET_NAME = "indian_pines_corrected"
 myDPI = 96
 
 PINE_NAME = [
+  'Roads or Barefields',
   'Alfalfa',
   'Corn-notill',
   'Corn-mintill',
@@ -59,6 +61,13 @@ PINE_NAME = [
   'Buildings Grass Trees Drives',
   'Stone Steel Towers'
 ]
+def plt_attr(ylabel: str = None, xlabel: str = None,
+             yscale: str = None, xscale: str = None):
+  if xlabel is not None: plt.xlabel(xlabel)
+  if xscale is not None: plt.xscale(xscale)
+  if yscale is not None: plt.yscale(yscale)
+  if ylabel is not None: plt.ylabel(ylabel)
+  return
 
 def clean(path = None, exts = [".pkl", ".json"]):
   if path is None:
@@ -93,10 +102,12 @@ parser.add_argument("--pca", type=int, required=False, default=42,
                     choices=range(0, 201), metavar="[0-200]",
                     help="Enable Principal Component Analysis (PCA) with n "
                          "components. Default: 42")
-parser.add_argument("--lda", required=False, default=False,
-                    action="store_true",
-                    help="Enable Linear Discrimination Analysis (LDA) to be "
-                         "run after PCA.")
+parser.add_argument("--lda", type=int, required=False, default=0,
+                    choices=range(0, 201), metavar="[0-200]",
+                    help="Enable Linear Discrimination Analysis (LDA) with n "
+                         "components to be excecute after PCA. If the value "
+                         "is set to zero, then LDA will not be executed. "
+                         "Default: 0")
 parser.add_argument("--RF", required=False, default=0, type=int,
                     help="Enable model Random Forest (RF) after Data "
                          "Preprocessing.")
@@ -112,20 +123,14 @@ parser.add_argument("--GNB", required=False, default=False,
                     help="Flag which enables to run Gaussian Naive Bayes "
                          "after Data Preprocessing.")
 
-# Initializing Classifiers
-#clf1 = LogisticRegression(random_state=1, solver='lbfgs')
-#clf2 = RandomForestClassifier(n_estimators=100,
-#                              random_state=1)
-#clf3 = GaussianNB()
-#clf4 = SVC(gamma='auto')
-
-def plt_im(y, path, name, cmap = "nipy_spectral"):
+def plt_im(y, path, name, cmap="nipy_spectral"):
   plt.figure(figsize=(10, 8))
   plt.imshow(y, cmap=cmap)
   plt.colorbar()
   plt.axis("off")
   plt.title(name)
   plt.savefig(os.path.join(path, name + ".png"))
+  plt.close()  # Close the figure to release resources
   return
 
 def sns_im(y, path: str, name: str, cmap: str = "coolwarm"):
@@ -133,21 +138,9 @@ def sns_im(y, path: str, name: str, cmap: str = "coolwarm"):
   sns.heatmap(y, cmap=cmap, annot=False)
   plt.title(name)
   plt.savefig(os.path.join(path, name + ".png"), dpi=myDPI*10)
+  plt.close()  # Close the figure to release resources
   return
 
-def plt_attr(ylabel: str = None, xlabel: str = None,
-             yscale: str = None, xscale: str = None):
-  if xlabel is not None:
-    plt.xlabel(xlabel)
-  if xscale is not None:
-    plt.xscale(xscale)
-  if yscale is not None:
-    plt.yscale(yscale)
-  if ylabel is not None:
-    plt.ylabel(ylabel)
-  return
-
-# TODO: Use kwargs
 def plt_pl(y, path: str, name:str, color: str = "blue", x = None,
            ylabel: str = None, xlabel: str = None, yscale: str = None,
            xscale: str = None):
@@ -159,9 +152,9 @@ def plt_pl(y, path: str, name:str, color: str = "blue", x = None,
   plt_attr(ylabel, xlabel, yscale, xscale)
   plt.title(name)
   plt.savefig(os.path.join(path, name + ".png"))
+  plt.close()  # Close the figure to release resources
   return
 
-# TODO: Use kwargs
 def plt_sc(x, y, path: str, name: str, ylabel: str = None, xlabel: str = None,
            yscale: str = None, xscale: str = None, c = None, z = None,
            zlabel: str = None):
@@ -177,6 +170,7 @@ def plt_sc(x, y, path: str, name: str, ylabel: str = None, xlabel: str = None,
     ax.set_ylabel(ylabel)
     ax.set_zlabel(zlabel)
   plt.savefig(os.path.join(path, name + ".png"))
+  plt.close()  # Close the figure to release resources
   return
 
 def main(args):
@@ -210,6 +204,8 @@ def main(args):
   if args.test != 0.0 and args.test != 1.0:
     # TRAIN + TEST
     # Standarize Dataset
+    X_zeros = X[X[TARGET_STR] == 0]
+    X = X[X[TARGET_STR] != 0]
     X_train, X_test, y_train, y_test = train_test_split(
       X[FEATURES], X[TARGET_STR], test_size=args.test, random_state=1,
       stratify=X[TARGET_STR])
@@ -250,6 +246,7 @@ def main(args):
     if args.force or not os.path.isfile(myDataSet):
       pinesPCA.set_output(transform="pandas")
       X_train = pinesPCA.fit_transform(X_train)
+      X_test = pinesPCA.transform(X_test)
       jl.dump(pinesPCA, os.path.join(DATA_PATH, name + ".gz"))
       pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       PC1, PC2, PC3 = X_train[
@@ -277,10 +274,14 @@ def main(args):
       name += "LDA"
     else:
       name += "_LDA"
+    name += f"_{args.lda:03}"
     myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
     if args.force or not os.path.isfile(myDataSet):
-      pinesLDA = LinearDiscriminantAnalysis().set_output(transform="pandas")
+      pinesLDA = LinearDiscriminantAnalysis(
+                   solver="svd",
+                   n_components=args.lda).set_output(transform="pandas")
       X_train = pinesLDA.fit_transform(X_train, y_train)
+      X_test = pinesLDA.transform(X_test)
       jl.dump(pinesLDA, os.path.join(DATA_PATH, name + ".gz"))
       pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       LC1, LC2, LC3 = X_train[
@@ -301,7 +302,6 @@ def main(args):
         pinesLDA = jl.load(os.path.join(DATA_PATH, name + ".gz"))
         X_test = pinesLDA.transform(X_test)
 
-  print(X_test)
   # WARNING: If the following assertion fails, then the Data has not been
   #          preprocessed
   assert name != ""
@@ -315,11 +315,18 @@ def main(args):
     if X_test is not None:
       # We now test our model
       y_pred[model_name] = pinesRF.predict(X_test)
+
   if args.SVC:
     #
     model_name = name + "_SVC"
+    # Initialize SVM classifier with a linear kernel
+    pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
+    # pinesSVC = SVC(gamma='auto')
+    pinesSVC.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our support vector model
+      y_pred[model_name] = pinesSVC.predict(X_test)
 
-    pass
   if args.LogR:
     # Logistic Regression
     model_name = name + "_LogR"
@@ -329,16 +336,25 @@ def main(args):
     if X_test is not None:
       # We now test our model
       y_pred[model_name] = pinesLogR.predict(X_test)
+
   if args.GNB:
     # Gaussian Naive Bayes
     model_name = name + "_GNB"
+    pinesGNB = GaussianNB()
+    pinesGNB.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our support vector model
+      y_pred[model_name] = pinesGNB.predict(X_test)
     pass
 
+  # Test Reports
   if y_pred and y_test is not None:
     for model, pred in y_pred.items():
       print(model)
-      print(classification_report(pred, y_test))
-    pass
+      # Evaluate the performance
+      accuracy = accuracy_score(pred, y_test)
+      print(f'Accuracy: {accuracy * 100:.2f}%')
+      print(classification_report(pred, y_test, zero_division=1))
 
   return
 
