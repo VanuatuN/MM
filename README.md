@@ -40,6 +40,6 @@ The correlation co-efficints of the bands with the class (specie) column was ana
 It was obvious that these bands were strongly correlated as well, hence any two of them, could most probably be used to train an algorithm to make predictions. 
 
 A plot of the pixel distribution of the 'Class' column is presented below:
-![Alt text](../band196_vs_class.png)
+![Alt text](band196_vs_class.png)
 
 In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
