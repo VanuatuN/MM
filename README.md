@@ -30,6 +30,24 @@ some land types are clearly distinguishable in different satellite bands.
 
 Figure 1. Example of the satellite images in different spectral bands. 
 
+As a first step we apply a Pricipal Components decomposition to the 200 matrixes of the size 145x145 to see
+whether PCs are (i) distiguashable between each other and (ii) how many PCs we need to describe most of the varibility
+in the dataset. These anlysis allows to see the clusters in the data and quantify the measure of their
+"separation" to make further descision for the methods of analysis. <br>
+
+The PCs analysis shows that first 5 PCs expaling more the 90% of the total variability in the dataset.
+While 
+PC 1 explains XX %
+PC 2 explains XX %
+PC 3 exploains XX %
+
+
+There is also a clear clustering of the data points in PCs space, suggesting that data clusters are
+separated and can be further analyses succesfully with machine learning methods. 
+
+![image](https://github.com/VanuatuN/MM/assets/23639320/bdf28b5c-0a2c-4b23-94bf-53932a34bddf)
+Figure 2. First 3 PCAs plotted in a 3D space. 
+
 Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image were analyzed for the presence of redundancy of the data they all held.<br>
 This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
 
