@@ -13,6 +13,10 @@ Hyperspectral data provide a lot of information for the remote discrimination of
 
 The goal of the group assignmnet was to exploit the tools for machine learning to analyze hyperspectral images of Indian pine fields to provide information for remote discrimination of subtle differences in the ground truth. <br>
 
+The dataset consists of 200 satellite images of the same area, each corresponds to the one spectral band of the remote sensor. We expect different types of the land surface 
+to have a different reflectivity among those 200 bands. We will make at attemple to classify land types according to their representation on images in different bands. <br>
+
+
 ### Exploratory Data Analysis
 - Data Description <br>
 
