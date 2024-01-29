@@ -106,10 +106,11 @@ parser.add_argument("--pca", type=int, required=False, default=42,
                     choices=range(0, 201), metavar="[0-200]",
                     help="Enable Principal Component Analysis (PCA) with n "
                          "components. Default: 42")
-parser.add_argument("--lda", required=False, default=False,
-                    action="store_true",
-                    help="Enable Linear Discrimination Analysis (LDA) to be "
-                         "run after PCA.")
+parser.add_argument("--lda", type=int, required=False, default=0,
+                    help="Enable Linear Discrimination Analysis (LDA) with n "
+                         "components to be excecute after PCA. If the value "
+                         "is set to zero, then LDA will not be executed. "
+                         "Default: 0")
 parser.add_argument("--RF", required=False, default=0, type=int,
                     help="Enable model Random Forest (RF) after Data "
                          "Preprocessing.")
@@ -124,13 +125,6 @@ parser.add_argument("--GNB", required=False, default=False,
                     action="store_true",
                     help="Flag which enables to run Gaussian Naive Bayes "
                          "after Data Preprocessing.")
-
-# Initializing Classifiers
-#clf1 = LogisticRegression(random_state=1, solver='lbfgs')
-#clf2 = RandomForestClassifier(n_estimators=100,
-#                              random_state=1)
-#clf3 = GaussianNB()
-#clf4 = SVC(gamma='auto')
 
 def plt_im(y, path, name, cmap="nipy_spectral"):
     plt.figure(figsize=(10, 8))
@@ -253,6 +247,7 @@ def main(args):
     if args.force or not os.path.isfile(myDataSet):
       pinesPCA.set_output(transform="pandas")
       X_train = pinesPCA.fit_transform(X_train)
+      X_test = pinesPCA.transform(X_test)
       jl.dump(pinesPCA, os.path.join(DATA_PATH, name + ".gz"))
       pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       PC1, PC2, PC3 = X_train[
@@ -280,10 +275,14 @@ def main(args):
       name += "LDA"
     else:
       name += "_LDA"
+    name += f"_{args.lda:03}"
     myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
     if args.force or not os.path.isfile(myDataSet):
-      pinesLDA = LinearDiscriminantAnalysis().set_output(transform="pandas")
+      pinesLDA = LinearDiscriminantAnalysis(
+                   solver="svd",
+                   n_components=args.lda).set_output(transform="pandas")
       X_train = pinesLDA.fit_transform(X_train, y_train)
+      X_test = pinesLDA.transform(X_test)
       jl.dump(pinesLDA, os.path.join(DATA_PATH, name + ".gz"))
       pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       LC1, LC2, LC3 = X_train[
@@ -304,7 +303,6 @@ def main(args):
         pinesLDA = jl.load(os.path.join(DATA_PATH, name + ".gz"))
         X_test = pinesLDA.transform(X_test)
 
-  print(X_test)
   # WARNING: If the following assertion fails, then the Data has not been
   #          preprocessed
   assert name != ""
