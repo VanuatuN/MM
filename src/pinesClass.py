@@ -347,6 +347,9 @@ def main(args):
   if y_pred and y_test is not None:
     for model, pred in y_pred.items():
       print(model)
+      # Evaluate the performance
+      accuracy = accuracy_score(pred, y_test)
+      print(f'Accuracy: {accuracy * 100:.2f}%')
       print(classification_report(pred, y_test))
 
   return
