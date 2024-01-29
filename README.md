@@ -13,7 +13,7 @@ Hyperspectral data provide a lot of information for the remote discrimination of
 
 The goal of the group assignmnet was to exploit the tools for machine learning to analyze hyperspectral images of Indian pine fields to provide information for remote discrimination of subtle differences in the ground truth. <br>
 
-Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes contained in 200 bands of image were analyzed for the presence of redundancy of the information they all held. <br>
+Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes contained in 200 bands of image were analyzed for the presence of redundancy of the information they all held.<br>
 This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
 
 The correlation coefficients of the bands with the class (specie) column was analyzed. The highest correlation coefficient was estimated to be ~ 0.23. Selected Bands with Correlation Coefficient >= 0.238 with the Class (Specie) Column were as follows:<br>
@@ -41,8 +41,10 @@ The correlation coefficients of the bands with the class (specie) column was ana
 
 It was obvious that these bands were strongly correlated as well, hence any two of them, could most probably be used to train an algorithm to make predictions. <br>
 
-A plot of the pixel distribution of the 'Class' column is presented below:<br>
+A plot of the pixel distribution of the 'Class' column for band196  is presented below:<br>
 ![Alt text](band196_vs_class.png) <br>
 
+Fig. 1: 
+<br>
 
 In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
