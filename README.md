@@ -16,9 +16,19 @@ The goal of the group assignmnet was to exploit the tools for machine learning t
 The dataset consists of 200 satellite images of the same area, each corresponds to the one spectral band of the remote sensor. We expect different types of the land surface 
 to have a different reflectivity among those 200 bands. We will make at attemple to classify land types according to their representation on images in different bands. <br>
 
+We also have a "reference": the images that contains "target": classified patters of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
+Assuming we trained our model on this dataset, e.g. managed to predic the type of the land surface on the satellte imagery this can further be applied
+for the classification of the same 200 bands on the satellite imagery for the other areas. <br>
 
 ### Exploratory Data Analysis
 - Data Description <br>
+
+We first expore the data by plotting images from random bands. There are several patterns that can be observed from this simple procedure, this suggest 
+some land types are clearly distinguishable in different satellite bands.
+
+![image](https://github.com/VanuatuN/MM/assets/23639320/2e8cf3a1-93c0-4b81-a38f-46eaa62ec35b)
+
+Figure 1. Example of the satellite images in different spectral bands. 
 
 Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image were analyzed for the presence of redundancy of the data they all held.<br>
 This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
