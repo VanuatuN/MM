@@ -55,7 +55,7 @@ A plot of the pixel distribution of the 'Class' column for band196  is presented
 Fig. 1: 
 <br>
 
-![Alt text](labels_distribution.png) <br>
+![Alt text](img/EDA/labels_distribution.png) <br>
 
 Fig. 2: Labels distribution
 
@@ -66,6 +66,6 @@ We then dropped the class '0', by using a preliminary Exploratory Data Analysis 
 
 - Principal Component Analysis
 
-- Linear Discriminant Analysis
+Principal Component Analysis is a method that is used to reduce the dimension of the features, in this case from 200 bands to a more manageable number of bands. The PCA implies the maximization of the sum of the feature projections onto chosen principal directions, or components. The principal components are generally fewer than the total number of features, but they are still carrying enough information for the classification model and are sorted by most to least principality.
+The number of principal components can be deduced, as an example, by observing the Explained Variance Ratio plot and its cumulative variant, which is a measure of the variance from one component to the next: the presence of a knee point between the first principal components and the rest of them may be a signal of a break in significance between ranges of components.   
 
-In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
