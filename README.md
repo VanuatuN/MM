@@ -54,9 +54,7 @@ A plot of the pixel distribution of the 'Class' column for band196  is presented
 Fig. 1: Pixel distribution from different classed of objects
 <br>
 
-The distribution of each object class was explored to understand the overall contribution of pixel data among classes. 
-
-![Alt text](labels_distribution.png) <br>
+![Alt text](img/EDA/labels_distribution.png) <br>
 
 Fig. 2: Labels distribution
 
@@ -76,4 +74,6 @@ It was clear that objects from class '0' cluttered the discripancies obtained. <
 We then dropped the class '0', based on these preliminary Exploratory Data Analysis on the raw dataset. Hence, considering just 2 classes, the '0' class associated to no pines presence, and class '1' with considers the presence of pines was appropriate for training and testing. <br> 
 This choice was made in consideration that the prominent Correlation Coefficient for the bands would be mostly associated to the target classes '0' and '1', followed by a Principal Component Analysis (PCA) to sort the dataset according to the most important features.
 The modified dataset is then standardized, fitted. transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species (so class '1'), to help the next multivariate classification and improve the accuracy score of the prediction. 
+Principal Component Analysis is a method that is used to reduce the dimension of the features, in this case from 200 bands to a more manageable number of bands. The PCA implies the maximization of the sum of the feature projections onto chosen principal directions, or components. The principal components are generally fewer than the total number of features, but they are still carrying enough information for the classification model and are sorted by most to least principality.
+The number of principal components can be deduced, as an example, by observing the Explained Variance Ratio plot and its cumulative variant, which is a measure of the variance from one component to the next: the presence of a knee point between the first principal components and the rest of them may be a signal of a break in significance between ranges of components.   
 
