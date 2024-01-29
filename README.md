@@ -1,10 +1,10 @@
 # MM
 Group project - Machine learning (P.11)
 
-Ken 
-Edward 
-Andrea 
-Natalia
+Ken <br>
+Edward <br>
+Andrea <br>
+Natalia <br>
 
 ## Reports 
 ### Backgorund
@@ -21,7 +21,6 @@ Exploratory Data analysis of our choice focused on, first understanding the data
 
 
 This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
-
 
 
 The correlation coefficients of the bands with the class (specie) column was analyzed. The highest correlation coefficient was estimated to be ~ 0.23. Selected Bands with Correlation Coefficient >= 0.238 with the Class (Specie) Column were as follows:<br>
@@ -52,20 +51,29 @@ It was obvious that these bands were strongly correlated as well, hence any two 
 A plot of the pixel distribution of the 'Class' column for band196  is presented below:<br>
 ![Alt text](band196_vs_class.png) <br>
 
-Fig. 1: 
+Fig. 1: Pixel distribution from different classed of objects
 <br>
+
+The distribution of each object class was explored to understand the overall contribution of pixel data among classes. 
 
 ![Alt text](labels_distribution.png) <br>
 
 Fig. 2: Labels distribution
 
-The distribution of classes inside the dataset (fig. 2) shows that the number of samplings associated to class label '0', (which is associated to no presence of pines), is comparable in magnitude to the sum of all other target classes fro '1' to '16'. This could create an imbalance in the next multivariate classification of the pine species.
-We then dropped the class '0', by using a preliminary Exploratory Data Analysis on a dataset considering just 2 classes, the '0' class associated to no pines presence, and class '1' with considers the presence of pines. This preliminary EDA considers the prominent Correlation Coefficient for the bands mostly assocted to the classes '0' and '1', then a Principal Component Analysis (PCA) to sort the dataset according to the most important features.
- The modified dataset is then standardized, fitted. transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species (so class '1'), to help the next multivariate classification and improve the accuracy score of the prediction. 
+The distribution of classes inside the dataset (fig. 2) showed that the number of samples associated to class label '0' only, (which is associated to no presence of pines), was comparable in magnitude to the sum of all the remaining target classes from '1' to '16'. This observation suggested that objects of class '0' could create an imbalance in the next multivariate classification of the pine species.
+
+Figure 3a and 3b show a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor embedding was used to visualize the  high-dimensional raw data in lower-dimensional spaces, typically 3D and 2D respectively. <br> 
+
+![Alt text](lda_raw.png) <br>
+Fig. 3a:
+
+![Alt text](tSNE_raw.png) <br>
+Fig. 3b:
+
+It was clear that objects from class '0' cluttered the discripancies obtained. <br>
 
 
-- Principal Component Analysis
+We then dropped the class '0', based on these preliminary Exploratory Data Analysis on the raw dataset. Hence, considering just 2 classes, the '0' class associated to no pines presence, and class '1' with considers the presence of pines was appropriate for training and testing. <br> 
+This choice was made in consideration that the prominent Correlation Coefficient for the bands would be mostly associated to the target classes '0' and '1', followed by a Principal Component Analysis (PCA) to sort the dataset according to the most important features.
+The modified dataset is then standardized, fitted. transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species (so class '1'), to help the next multivariate classification and improve the accuracy score of the prediction. 
 
-- Linear Discriminant Analysis
-
-In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
