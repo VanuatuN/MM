@@ -44,6 +44,7 @@ DATASET_NAME = "indian_pines_corrected"
 myDPI = 96
 
 PINE_NAME = [
+  'Roads or Barefields',
   'Alfalfa',
   'Corn-notill',
   'Corn-mintill',
@@ -318,6 +319,7 @@ def main(args):
     model_name = name + "_SVC"
     # Initialize SVM classifier with a linear kernel
     pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
+    # pinesSVC = SVC(gamma='auto')
     pinesSVC.fit(X_train, y_train)
     if X_test is not None:
       # We now test our support vector model
@@ -350,7 +352,7 @@ def main(args):
       # Evaluate the performance
       accuracy = accuracy_score(pred, y_test)
       print(f'Accuracy: {accuracy * 100:.2f}%')
-      print(classification_report(pred, y_test))
+      print(classification_report(pred, y_test, zero_division=1))
 
   return
 
