@@ -37,7 +37,7 @@ in the dataset. These anlysis allows to see the clusters in the data and quantif
 "separation" to make further descision for the methods of analysis. <br>
 
 The PCs analysis shows that first 5 PCs expaling more the 90% of the total variability in the dataset.
-While 
+While <br>
 PC 1 explains XX % <br>
 PC 2 explains XX % <br>
 PC 3 explains XX % <br>
