@@ -7,8 +7,6 @@ import joblib as jl
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import matplotlib 
-matplotlib.use('Agg')
 from sklearn.preprocessing import StandardScaler
 from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
@@ -23,8 +21,12 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 # Logistic Regression (LogR)
 from sklearn.linear_model import LogisticRegression
-
-
+# Random Forest
+from sklearn.ensemble import RandomForestClassifier
+# SVM Classifier
+from sklearn.svm import SVC
+# Gaussian Naive Bayes (GNB)
+from sklearn.naive_bayes import GaussianNB
 
 DATA_PATH = "../data"
 IMG_PATH = "../img"
@@ -74,12 +76,6 @@ parser.add_argument("--pca", type=int, required=False, default=42,
                     choices=range(0, 201), metavar="[0-200]",
                     help="Enable Principal Component Analysis (PCA) with n "
                          "components. Default: 42")
-parser.add_argument("--lda", type=int, required=False, default=0,
-                    choices=range(0, 201), metavar="[0-200]",
-                    help="Enable Linear Discrimination Analysis (LDA) with n "
-                         "components to be excecute after PCA. If the value "
-                         "is set to zero, then LDA will not be executed. "
-                         "Default: 0")
 parser.add_argument("--RF", required=False, default=0, type=int,
                     help="Enable model Random Forest (RF) after Data "
                          "Preprocessing.")
@@ -142,7 +138,7 @@ def plt_sc(x, y, path: str, name: str, ylabel: str = None, xlabel: str = None,
     ax.set_ylabel(ylabel)
     ax.set_zlabel(zlabel)
   plt.savefig(os.path.join(path, name + ".png"))
-  plt.close()  # Close the figure to release resources
+  #plt.close()  # Close the figure to release resources
   return
 
 def main(args):
@@ -157,9 +153,9 @@ def main(args):
     FEATURES = [f"Band_{i:03}" for i in range(1, X_SHAPE[2] + 1)]
     X = pd.DataFrame(X.reshape(-1, X_SHAPE[2]), columns=FEATURES)
     X[TARGET_STR] = loadmat(TARGET_PATH)[TARGET_NAME].flatten()
-    X_nonzero = X[X[TARGET_STR] != 0]
-    X_nonzero.loc[:, TARGET_STR] = 1
-    print(X_nonzero)
+    X.loc[X[TARGET_STR] != 0, TARGET_STR] = 1
+
+    #print(X)
     X[FEATURES + [TARGET_STR]].to_pickle(myDataSet)
     with open(os.path.join(DATA_PATH, "Datashape.json"), 'w') as fp:
       json.dump({x: y for x, y in zip(['X', 'Y', 'Z'], X_SHAPE)}, fp)
@@ -178,8 +174,6 @@ def main(args):
   if args.test != 0.0 and args.test != 1.0:
     # TRAIN + TEST
     # Standarize Dataset
-    X_zeros = X[X[TARGET_STR] == 0]
-    X = X[X[TARGET_STR] != 0]
     X_train, X_test, y_train, y_test = train_test_split(
       X[FEATURES], X[TARGET_STR], test_size=args.test, random_state=1,
       stratify=X[TARGET_STR])
@@ -210,7 +204,9 @@ def main(args):
   CORR = np.abs(X.corr())
   sns_im(CORR, os.path.join(IMG_PATH, SECTION), "Correlation_Mtx")
   FEATURES_RELEVANT = CORR[CORR[TARGET_STR] > 0.2]
-
+  mytarget=CORR[TARGET_STR].sort_values().to_numpy()
+  trace=np.sum(mytarget)
+  print(np.sum(mytarget[-42:-1])/trace)
   name = ""
   if args.pca != 0:
     # Principal Component Analysis (PCA)
@@ -233,6 +229,7 @@ def main(args):
              xlabel="Principal Component 1",
              ylabel="Principal Component 2",
              zlabel="Principal Component 3")
+      plt.show()
     else:
       myData = pd.read_pickle(myDataSet)
       X_train = myData[[C for C in myData.columns if C != TARGET_STR]]
@@ -241,40 +238,7 @@ def main(args):
         pinesPCA = jl.load(os.path.join(DATA_PATH, name + ".gz"))
         X_test = pinesPCA.transform(X_test)
 
-  if args.lda:
-    # Linear Discrimination Analysis (LDA)
-    pinesLDA = None
-    if name == "":
-      name += "LDA"
-    else:
-      name += "_LDA"
-    name += f"_{args.lda:03}"
-    myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
-    if args.force or not os.path.isfile(myDataSet):
-      pinesLDA = LinearDiscriminantAnalysis(
-                   solver="svd",
-                   n_components=args.lda).set_output(transform="pandas")
-      X_train = pinesLDA.fit_transform(X_train, y_train)
-      X_test = pinesLDA.transform(X_test)
-      jl.dump(pinesLDA, os.path.join(DATA_PATH, name + ".gz"))
-      pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
-      LC1, LC2, LC3 = X_train[
-                        pinesLDA.get_feature_names_out()[:3]].to_numpy().T
-      plt_pl(pinesLDA.explained_variance_ratio_,
-             os.path.join(IMG_PATH, SECTION), name + "_VarExp", yscale="log",
-             xlabel="Linear Components", ylabel="Variance Explained")
-      plt_sc(LC1, LC2, os.path.join(IMG_PATH, SECTION),
-             name + "_" + TARGET_STR, c=y_train, z=LC3,
-             xlabel="Linear Component 1",
-             ylabel="Linear Component 2",
-             zlabel="Linear Component 3")
-    else:
-      myData = pd.read_pickle(myDataSet)
-      X_train = myData[[C for C in myData.columns if C != TARGET_STR]]
-      y_train = myData[TARGET_STR]
-      if X_test is not None:
-        pinesLDA = jl.load(os.path.join(DATA_PATH, name + ".gz"))
-        X_test = pinesLDA.transform(X_test)
+  
 
   # WARNING: If the following assertion fails, then the Data has not been
   #          preprocessed
@@ -294,8 +258,8 @@ def main(args):
     #
     model_name = name + "_SVC"
     # Initialize SVM classifier with a linear kernel
-    pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
-    # pinesSVC = SVC(gamma='auto')
+    #pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
+    pinesSVC = SVC(gamma='auto')
     pinesSVC.fit(X_train, y_train)
     if X_test is not None:
       # We now test our support vector model
@@ -304,7 +268,7 @@ def main(args):
   if args.LogR:
     # Logistic Regression
     model_name = name + "_LogR"
-    pinesLogR = LogisticRegression(penalty='none', fit_intercept=True,
+    pinesLogR = LogisticRegression(penalty=None, fit_intercept=True,
                                    max_iter=args.LogR, tol=1E-5)
     pinesLogR.fit(X_train, y_train)
     if X_test is not None:
