@@ -6,8 +6,9 @@ Edward
 Andrea 
 Natalia
 
-## Reports 
-### Backgorund
+# Report
+
+## Backgorund
  
 Hyperspectral data provide a lot of information for the remote discrimination of ground truth, however, since spectral dimensions are usually many, the possibility of information redundancy is presented. Data analysis and interpretation of hyperspectral images can also be a challenge. <br>
 
@@ -20,7 +21,7 @@ We also have a "reference": the images that contains "target": classified patter
 Assuming we trained our model on this dataset, e.g. managed to predic the type of the land surface on the satellte imagery this can further be applied
 for the classification of the same 200 bands on the satellite imagery for the other areas. <br>
 
-### Exploratory Data Analysis
+## Exploratory Data Analysis
 - Data Description <br>
 
 We first expore the data by plotting images from random bands. There are several patterns that can be observed from this simple procedure, this suggest 
@@ -37,9 +38,9 @@ in the dataset. These anlysis allows to see the clusters in the data and quantif
 
 The PCs analysis shows that first 5 PCs expaling more the 90% of the total variability in the dataset.
 While 
-PC 1 explains XX %
-PC 2 explains XX %
-PC 3 exploains XX %
+PC 1 explains XX % <br>
+PC 2 explains XX % <br>
+PC 3 explains XX % <br>
 
 
 There is also a clear clustering of the data points in PCs space, suggesting that data clusters are
