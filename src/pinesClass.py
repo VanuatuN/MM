@@ -7,6 +7,8 @@ import joblib as jl
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib 
+matplotlib.use('Agg')
 from sklearn.preprocessing import StandardScaler
 from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
@@ -27,7 +29,7 @@ from sklearn.linear_model import LogisticRegression
 # Gaussian Naive Bayes (GNB)
 from sklearn.naive_bayes import GaussianNB
 
-# 
+# SVM Classifier
 from sklearn.svm import SVC
 
 DATA_PATH = "../data"
@@ -59,7 +61,18 @@ PINE_NAME = [
   'Buildings Grass Trees Drives',
   'Stone Steel Towers'
 ]
-
+def plt_attr(ylabel: str = None, xlabel: str = None,
+             yscale: str = None, xscale: str = None):
+    if xlabel is not None:
+        plt.xlabel(xlabel)
+    if xscale is not None:
+        plt.xscale(xscale)
+    if yscale is not None:
+        plt.yscale(yscale)
+    if ylabel is not None:
+        plt.ylabel(ylabel)
+    return
+  
 def clean(path = None, exts = [".pkl", ".json"]):
   if path is None:
     path = DATA_PATH
@@ -113,65 +126,55 @@ parser.add_argument("--GNB", required=False, default=False,
                     help="Flag which enables to run Gaussian Naive Bayes "
                          "after Data Preprocessing.")
 
-def plt_im(y, path, name, cmap = "nipy_spectral"):
-  plt.figure(figsize=(10, 8))
-  plt.imshow(y, cmap=cmap)
-  plt.colorbar()
-  plt.axis("off")
-  plt.title(name)
-  plt.savefig(os.path.join(path, name + ".png"))
-  return
+def plt_im(y, path, name, cmap="nipy_spectral"):
+    plt.figure(figsize=(10, 8))
+    plt.imshow(y, cmap=cmap)
+    plt.colorbar()
+    plt.axis("off")
+    plt.title(name)
+    plt.savefig(os.path.join(path, name + ".png"))
+    plt.close()  # Close the figure to release resources
+    return
 
 def sns_im(y, path: str, name: str, cmap: str = "coolwarm"):
-  plt.figure(figsize=(1000/myDPI, 800/myDPI), dpi=myDPI)
-  sns.heatmap(y, cmap=cmap, annot=False)
-  plt.title(name)
-  plt.savefig(os.path.join(path, name + ".png"), dpi=myDPI*10)
-  return
+    plt.figure(figsize=(1000/myDPI, 800/myDPI), dpi=myDPI)
+    sns.heatmap(y, cmap=cmap, annot=False)
+    plt.title(name)
+    plt.savefig(os.path.join(path, name + ".png"), dpi=myDPI*10)
+    plt.close()  # Close the figure to release resources
+    return
 
-def plt_attr(ylabel: str = None, xlabel: str = None,
-             yscale: str = None, xscale: str = None):
-  if xlabel is not None:
-    plt.xlabel(xlabel)
-  if xscale is not None:
-    plt.xscale(xscale)
-  if yscale is not None:
-    plt.yscale(yscale)
-  if ylabel is not None:
-    plt.ylabel(ylabel)
-  return
-
-# TODO: Use kwargs
 def plt_pl(y, path: str, name:str, color: str = "blue", x = None,
            ylabel: str = None, xlabel: str = None, yscale: str = None,
            xscale: str = None):
-  plt.figure(figsize=(12, 6))
-  if x is None:
-    plt.plot(y, marker='o', linewidth=2, color=color)
-  else:
-    plt.plot(x, y, marker='o', linewidth=2, color=color)
-  plt_attr(ylabel, xlabel, yscale, xscale)
-  plt.title(name)
-  plt.savefig(os.path.join(path, name + ".png"))
-  return
+    plt.figure(figsize=(12, 6))
+    if x is None:
+        plt.plot(y, marker='o', linewidth=2, color=color)
+    else:
+        plt.plot(x, y, marker='o', linewidth=2, color=color)
+    plt_attr(ylabel, xlabel, yscale, xscale)
+    plt.title(name)
+    plt.savefig(os.path.join(path, name + ".png"))
+    plt.close()  # Close the figure to release resources
+    return
 
-# TODO: Use kwargs
 def plt_sc(x, y, path: str, name: str, ylabel: str = None, xlabel: str = None,
            yscale: str = None, xscale: str = None, c = None, z = None,
            zlabel: str = None):
-  if z is None:
-    plt.scatter(x, y, c=c)
-    plt_attr(ylabel, xlabel, yscale, xscale)
-    plt.title(name)
-  else:
-    fig = plt.figure(figsize=(10, 8))
-    ax = fig.add_subplot(projection='3d')
-    ax.scatter(x, y, z, c=c)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    ax.set_zlabel(zlabel)
-  plt.savefig(os.path.join(path, name + ".png"))
-  return
+    if z is None:
+        plt.scatter(x, y, c=c)
+        plt_attr(ylabel, xlabel, yscale, xscale)
+        plt.title(name)
+    else:
+        fig = plt.figure(figsize=(10, 8))
+        ax = fig.add_subplot(projection='3d')
+        ax.scatter(x, y, z, c=c)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.set_zlabel(zlabel)
+    plt.savefig(os.path.join(path, name + ".png"))
+    plt.close()  # Close the figure to release resources
+    return
 
 def main(args):
   myDataSet = os.path.join(DATA_PATH, DATASET_STR + ".pkl")
@@ -316,7 +319,12 @@ def main(args):
   if args.SVC:
     #
     model_name = name + "_SVC"
-
+    # Initialize SVM classifier with a linear kernel
+    pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
+    pinesSVC.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our support vector model
+      y_pred[model_name] = pinesSVC.predict(X_test)
     pass
   if args.LogR:
     # Logistic Regression
@@ -330,6 +338,11 @@ def main(args):
   if args.GNB:
     # Gaussian Naive Bayes
     model_name = name + "_GNB"
+    pinesGNB = GaussianNB()
+    pinesGNB.fit(X_train, y_train)
+    if X_test is not None:
+      # We now test our support vector model
+      y_pred[model_name] = pinesGNB.predict(X_test)
     pass
 
   if y_pred and y_test is not None:
