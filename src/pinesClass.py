@@ -327,7 +327,7 @@ def main(args):
       'max_depth' : range(15, 50, 20),
     }
     CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
-                             n_jobs=-1, scoring="f1_samples")
+                             n_jobs=-1, scoring="accuracy")
     CVpinesRF.fit(X_train, y_train)
     print(CVpinesRF.best_params_)
     jl.dump(pinesRF, os.path.join(DATA_PATH, model_name + ".gz"))
@@ -345,7 +345,7 @@ def main(args):
       'random_state': [42]          # Random seed for reproducibility
     }
     CVpinesSVC = GridSearchCV(estimator=pinesSVC, param_grid=param_grid_svc,
-                              cv=5, n_jobs=-1, scoring="f1_samples")
+                              cv=5, n_jobs=-1, scoring="accuracy")
     CVpinesSVC.fit(X_train, y_train)
     print(CVpinesSVC.best_params_)
     jl.dump(pinesSVC, os.path.join(DATA_PATH, model_name + ".gz"))
@@ -365,7 +365,7 @@ def main(args):
       'fit_intercept' : [True, False]
     }
     CVpinesLogR = GridSearchCV(estimator=pinesLogR, param_grid=param_grid,
-                               cv=5, n_jobs=-1, scoring="f1_samples")
+                               cv=5, n_jobs=-1, scoring="accuracy")
     CVpinesLogR.fit(X_train, y_train)
     print(CVpinesLogR.best_params_)
     jl.dump(pinesLogR, os.path.join(DATA_PATH, model_name + ".gz"))
