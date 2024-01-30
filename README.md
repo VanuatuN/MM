@@ -140,10 +140,10 @@ Figure 5: Band 196 vs Class <br>
 Figure 6a and 6b show a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor Embedding (t-SNE) was used to visualize the high-dimensional raw data in lower-dimensional spaces, typically 3D and 2D respectively. <br> 
 
 ![Alt text](lda_raw.png) <br>
-Fig. 6a:
+Figure 6a.
 
 ![Alt text](tSNE_raw.png) <br>
-Fig. 6b:
+Figure 6b.
 
 Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
 The modified dataset is then standardized, fitted, transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species, to help the next multivariate classification and improve the accuracy score of the prediction. <br>
