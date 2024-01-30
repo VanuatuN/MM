@@ -10,13 +10,13 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 from sklearn.preprocessing import StandardScaler
-from mlxtend.plotting import plot_decision_regions
+#from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
                             confusion_matrix, roc_curve
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Exploratory Data Analysis (EDA)
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA,KernelPCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 # Random Forest (RF)
@@ -44,16 +44,16 @@ DATASET_NAME = "indian_pines_corrected"
 myDPI = 96
 
 PINE_NAME = [
-  'Roads or Barefields',          # 0
-  'Alfalfa',                      # 1
+  #'Roads or Barefields',          # 0
+  #'Alfalfa',                      # 1
   'Corn-notill',                  # 2
   'Corn-mintill',                 # 3
   'Corn',                         # 4
   'Grass-pasture',                # 5
   'Grass-trees',                  # 6
-  'Grass-pasture-mowed',          # 7
+  #'Grass-pasture-mowed',          # 7
   'Hay-windrowed',                # 8
-  'Oats',                         # 9
+  #'Oats',                         # 9
   'Soybean-notill',               # 10
   'Soybean-mintill',              # 11
   'Soybean-clean',                # 12
@@ -251,7 +251,7 @@ def main(args):
   name = TARGET_STR
   if args.pca != 0:
     # Principal Component Analysis (PCA)
-    pinesPCA = PCA(n_components=args.pca, svd_solver="full")
+    pinesPCA = KernelPCA(n_components=args.pca, kernel='rbf',n_jobs=-1)
     name += f"_PCA_{args.pca:03}"
     myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
     if args.force or not os.path.isfile(myDataSet):
@@ -262,9 +262,9 @@ def main(args):
       pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       PC1, PC2, PC3 = X_train[
                         pinesPCA.get_feature_names_out()[:3]].to_numpy().T
-      plt_pl(pinesPCA.explained_variance_ratio_,
-             os.path.join(IMG_PATH, SECTION), name + "_VarExp", yscale="log",
-             xlabel="Principal Components", ylabel="Variance Explained")
+      #plt_pl(pinesPCA.explained_variance_ratio_,
+      #       os.path.join(IMG_PATH, SECTION), name + "_VarExp", yscale="log",
+      #       xlabel="Principal Components", ylabel="Variance Explained")
       plt_sc(PC1, PC2, os.path.join(IMG_PATH, SECTION),
              name + "_" + TARGET_STR, c=y_train, z=PC3,
              xlabel="Principal Component 1",
@@ -321,18 +321,9 @@ def main(args):
   if args.RF:
     # Random Forest
     model_name = name + "_RF"
-    pinesRF = RandomForestClassifier()
-    param_grid = {
-      'n_estimators': range(100, 500, args.RF),
-      'max_features': ['auto', 'sqrt', 'log2'],
-      'max_depth' : range(15, 50, 5),
-      'criterion' : ['gini', 'entropy', 'log_loss'],
-      'bootstrap' : [True, False]
-    }
-    CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
-                          n_jobs=-1)
-    CVpinesRF.fit(X_train, y_train)
-    print(CVpinesRF.best_params_)
+    pinesRF = RandomForestClassifier(n_estimators=303, max_features='log2', bootstrap=False, criterion='log_loss', max_depth=32)
+    pinesRF.fit(X_train, y_train)
+    #print(CVpinesRF.best_params_)
     jl.dump(pinesRF, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our model
@@ -342,20 +333,9 @@ def main(args):
     #
     model_name = name + "_SVC"
     # Initialize SVM classifier with a parameter grid 
-    pinesSVC = SVC()
-    param_grid_svc = {
-      'C': [0.1, 1, 10, 100],          # Regularization parameter
-      'kernel': ['linear', 'rbf'],     # Kernel type ('linear', 'rbf', etc.)
-      'gamma': ['scale', 'auto'],      # Kernel coefficient for 'rbf' ('scale', 'auto', float)
-      'degree': [2, 3, 4],             # Degree of the polynomial kernel function ('poly' only)
-      'coef0': [0.0, 1.0, 2.0],        # Independent term in the kernel function
-      'shrinking': [True, False],      # Whether to use the shrinking heuristic
-      'probability': [True, False],    # Whether to enable probability estimates
-      'random_state': [42]             # Random seed for reproducibility
-    } 
-    CVpinesSVC = GridSearchCV(estimator=pinesSVC, param_grid=param_grid_svc, cv=5, n_jobs=-1)
-    CVpinesSVC.fit(X_train, y_train)
-    print(CVpinesSVC.best_params_)
+    pinesSVC = SVC(C=299, random_state=42, kernel='rbf', coef0=0.0, degree=2, probability=True, shrinking=True, gamma='scale')
+    pinesSVC.fit(X_train, y_train)
+    #print(CVpinesSVC.best_params_)
     jl.dump(pinesSVC, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our support vector model
@@ -364,8 +344,10 @@ def main(args):
   if args.LogR:
     # Logistic Regression
     model_name = name + "_LogR"
-    pinesLogR = LogisticRegression(penalty=None, fit_intercept=True,
-                                   max_iter=args.LogR, tol=1E-5)
+    pinesLogR = LogisticRegression(multi_class='multinomial',
+                                   max_iter=args.LogR, tol=1E-5,
+                                   solver='lbfgs',penalty='l2',
+                                   fit_intercept=True,C=115)
     pinesLogR.fit(X_train, y_train)
     jl.dump(pinesLogR, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
@@ -375,7 +357,7 @@ def main(args):
   if args.GNB:
     # Gaussian Naive Bayes
     model_name = name + "_GNB"
-    pinesGNB = GaussianNB()
+    pinesGNB = GaussianNB(var_smoothing=1e-09)
     pinesGNB.fit(X_train, y_train)
     jl.dump(pinesGNB, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
@@ -391,7 +373,22 @@ def main(args):
       accuracy = accuracy_score(pred, y_test)
       print(f'Accuracy: {accuracy * 100:.2f}%')
       print(classification_report(pred, y_test, zero_division=1))
-
+      # Confusion Matrix
+      cm = confusion_matrix(pred, y_test) 
+      print("Confusion Matrix:")
+      print(cm)
+      # Display Confusion Matrix as a heatmap
+      plt.figure(figsize=(8, 6))
+      sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=PINE_NAME, yticklabels=PINE_NAME)
+      plt.title(f"Confusion Matrix - {model}")
+      plt.xlabel("Predicted")
+      plt.ylabel("True")
+        
+      # Save Confusion Matrix plot as an image
+      img_path = os.path.join(IMG_PATH, "Confusion_Matrix")
+      os.makedirs(img_path, exist_ok=True)
+      img_name = f"{model}_Confusion_Matrix.png"
+      plt.savefig(os.path.join(img_path, img_name))
   return
 
 if __name__ == "__main__": main(parser.parse_args())
