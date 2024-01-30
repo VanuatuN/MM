@@ -12,31 +12,38 @@ Natalia
  
 Hyperspectral data provide a lot of information for the remote discrimination of ground truth, however, since spectral dimensions are usually many, the possibility of information redundancy is presented. Data analysis and interpretation of hyperspectral images can also be a challenge. <br>
 
-The goal of the group assignmnet was to exploit the tools for machine learning to analyze hyperspectral images of Indian pine fields to provide information for remote discrimination of subtle differences in the ground truth. <br>
+The goal of the group assignmnet was to explore machine learning tools to analyze hyperspectral images of Indian pine fields to classify land surfaces according to the groud truth proveded. <br>
 
 The dataset consists of 200 satellite images of the same area, each corresponds to the one spectral band of the remote sensor. We expect different types of the land surface 
-to have a different reflectivity among those 200 bands. We will make at attempte to classify land types according to their representation on images in different bands. <br>
+to have a different reflectivity among those 200 bands. We will make at attempt to classify land types according to their representation on images in different bands. <br>
 
 We also have a "reference": the images that contains "target": classified patters of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
 Assuming we trained our model on this dataset, e.g. managed to predic the type of the land surface on the satellte imagery this can further be applied
 for the classification of the same 200 bands on the satellite imagery for the other areas. <br>
 
 ## Exploratory Data Analysis
-- PCA <br>
+
+_Important note_: All 0 values and values of the target that covered sparsely by the data were removed, or classified as NaNs. The sparsely covered
+targets are: 0, 1, 7 and 9. In the end we analyse tagets: 2, 3, 4, 5, 6, 8, 10-16. 13 in total, each for one type of the land. 
+
+![image](https://github.com/VanuatuN/MM/assets/23639320/bb881288-5bcd-4b7d-a19e-1010b8c00b24)
+Figure 1: 
+
+- **PCA** <br>
 
 We first expore the data by plotting images for random bands. There are several patterns that can be observed from this simple procedure, this suggest 
 some land types are clearly distinguishable in different satellite bands.
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/2e8cf3a1-93c0-4b81-a38f-46eaa62ec35b)
 
-Figure 1. Example of the satellite images in different spectral bands. 
+Figure 2. Example of the satellite images in different spectral bands. 
 
 As a first step we apply a Pricipal Components decomposition to the 200 matrixes of the size 145x145 to see
 whether PCs are (i) distiguashable between each other and (ii) how many PCs we need to describe most of the varibility
 in the dataset. These anlysis allows to see the clusters in the data and quantify the measure of their
 "separation" to make further descision for the methods of analysis. <br>
 
-The PCs analysis shows that first 5 PCs expaling more than 92% of the total variability in the dataset.
+The PCs analysis shows that first 5 PCs expalin more than 92% of the total variability in the dataset.
 While <br>
 
 PC 1 explains 0.68 % <br>
@@ -45,14 +52,14 @@ PC 2 explains 0.19 % <br>
 There is also a clear clustering of the data points in PCs space (Figure 2), suggesting that data clusters are
 separated and can be further analysed succesfully with machine learning methods. 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bdf28b5c-0a2c-4b23-94bf-53932a34bddf)
-Figure 2. First 3 PCAs plotted in a 3D space. <br>
+Figure 3. First 3 PCAs plotted in a 3D space. <br>
 
 The next step was to check whether the reconstucted images only applying first 10 PCs would
 reflect the main features to be carptured by machine learning techniques. Figure 3 demonstrates
 those reconstructed images and we conclude that images are well reflecting the land features
 we want to classify. 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/5ac60da7-c650-4483-96f6-c79b475088dc)
-Figure 3. Reconstructed images (applying inverse transform with first 10 PCs) of for the different bands. <br>
+Figure 4. Reconstructed images (applying inverse transform with first 10 PCs) of for the different bands. <br>
 
 
 Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image were analyzed for the presence of redundancy of the data they all held.<br>
@@ -89,5 +96,47 @@ A plot of the pixel distribution of the 'Class' column for band196  is presented
 Figure 4: Band 196 vs Class <br>
 
 - Linear Discriminant Analysis <br>
+
+In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
+
+Figure 3a and 3b show a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor Embedding (t-SNE) was used to visualize the  high-dimensional raw data in lower-dimensional spaces, typically 3D and 2D respectively. <br> 
+
+![Alt text](lda_raw.png) <br>
+Fig. 3a:
+
+![Alt text](tSNE_raw.png) <br>
+Fig. 3b:
+
+It was clear that objects from class '0' cluttered the discrepancies obtained. <br>
+
+
+We then dropped the class '0', based on these preliminary Exploratory Data Analysis on the raw dataset. Hence, considering just 2 classes, the '0' class associated to no pines presence, and class '1' with considers the presence of pines was appropriate for training and testing. <br> 
+This choice was made in consideration that the prominent Correlation Coefficient for the bands would be mostly associated to the target classes '0' and '1', followed by a Principal Component Analysis (PCA) to sort the dataset according to the most important features.
+The modified dataset is then standardized, fitted. transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species (so class '1'), to help the next multivariate classification and improve the accuracy score of the prediction. <br>
+
+Principal Component Analysis <br> 
+it is a method that is used to reduce the dimension of the features, in this case from 200 bands to a more manageable number of bands. The PCA implies the maximization of the sum of the feature projections onto chosen principal directions, or components. The principal components are generally fewer than the total number of features, but they are still carrying enough information for the classification model and are sorted by most to least principality. <br>
+
+The number of principal components can be deduced, as an example, by observing the Explained Variance Ratio plot and its cumulative variant, which is a measure of the variance from one component to the next: the presence of a knee point between the first principal components and the rest of them may be a signal of a break in significance between ranges of components. <br>
+
+During the first EDA before binary classification, a number of principal components was fixed to 8, from the observation of Explained Variance Ratio and its cumulative. <br>
+
+Linear Discriminant Analysis <br>
+It is a technique to reduce the dimensionality and help classification, by finding the linear combinations of features that best separate the different classes in the dataset.
+It is best employed before the application of a classificaton algorithm, by maximizing the distance between the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory power of the features and the accuracy of the classification.
+
+## Classification report
+### Random Forest
+Run: python pinesClass.py -RF #
+
+### Logistic Regression (LogR)
+
+
+### Support Vector Classification (SVC)
+
+
+### Gaussian Naive Bayes (Gaussian NB)
+
+
 
 In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
