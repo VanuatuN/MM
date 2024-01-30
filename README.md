@@ -156,7 +156,7 @@ It is best employed before the application of a classificaton algorithm, by maxi
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/a95866d0-5ba0-4580-bbb3-5162cde0f491)
 
-Figure 7: Variance explained after application of the LDA. <br>
+Figure 7. Variance explained after application of the LDA. <br>
 
 LDA allows to significantly improve the variance explained by first 5 PCAs. 
 
@@ -165,6 +165,8 @@ LDA allows to significantly improve the variance explained by first 5 PCAs.
 
 Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
 The modified dataset is then standardized, fitted, transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species, to help the next multivariate classification and improve the accuracy score of the prediction. <br>
+
+Figure 8. Performance of the different methods for classification of the 
 
 ### Random Forest
 Run: python pinesClass.py -RF #
