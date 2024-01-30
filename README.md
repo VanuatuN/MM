@@ -15,16 +15,22 @@ Hyperspectral data provide a lot of information for the remote discrimination of
 The goal of the group assignmnet was to exploit the tools for machine learning to analyze hyperspectral images of Indian pine fields to provide information for remote discrimination of subtle differences in the ground truth. <br>
 
 The dataset consists of 200 satellite images of the same area, each corresponds to the one spectral band of the remote sensor. We expect different types of the land surface 
-to have a different reflectivity among those 200 bands. We will make at attemple to classify land types according to their representation on images in different bands. <br>
+to have a different reflectivity among those 200 bands. We will make at attempte to classify land types according to their representation on images in different bands. <br>
 
 We also have a "reference": the images that contains "target": classified patters of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
 Assuming we trained our model on this dataset, e.g. managed to predic the type of the land surface on the satellte imagery this can further be applied
 for the classification of the same 200 bands on the satellite imagery for the other areas. <br>
 
 ## Exploratory Data Analysis
-- Data Description <br>
 
-We first expore the data by plotting images from random bands. There are several patterns that can be observed from this simple procedure, this suggest 
+Importane notes: All 0 values and values of the target that covered sparsely with the data were removed, or classified as NaNs.
+
+![image](https://github.com/VanuatuN/MM/assets/23639320/bb881288-5bcd-4b7d-a19e-1010b8c00b24)
+Figure 1: 
+
+- PCA <br>
+
+We first expore the data by plotting images for random bands. There are several patterns that can be observed from this simple procedure, this suggest 
 some land types are clearly distinguishable in different satellite bands.
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/2e8cf3a1-93c0-4b81-a38f-46eaa62ec35b)
@@ -36,12 +42,11 @@ whether PCs are (i) distiguashable between each other and (ii) how many PCs we n
 in the dataset. These anlysis allows to see the clusters in the data and quantify the measure of their
 "separation" to make further descision for the methods of analysis. <br>
 
-The PCs analysis shows that first 5 PCs expaling more the 90% of the total variability in the dataset.
+The PCs analysis shows that first 5 PCs expaling more than 92% of the total variability in the dataset.
 While <br>
 
-PC 1 explains XX % <br>
-PC 2 explains XX % <br>
-PC 3 explains XX % <br>
+PC 1 explains 0.68 % <br>
+PC 2 explains 0.19 % <br>
 
 There is also a clear clustering of the data points in PCs space (Figure 2), suggesting that data clusters are
 separated and can be further analysed succesfully with machine learning methods. 
@@ -54,6 +59,7 @@ those reconstructed images and we conclude that images are well reflecting the l
 we want to classify. 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/5ac60da7-c650-4483-96f6-c79b475088dc)
 Figure 3. Reconstructed images (applying inverse transform with first 10 PCs) of for the different bands. <br>
+
 
 Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image were analyzed for the presence of redundancy of the data they all held.<br>
 This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
@@ -86,11 +92,8 @@ It was obvious that these bands were strongly correlated as well, hence any two 
 A plot of the pixel distribution of the 'Class' column for band196  is presented below:<br>
 ![Alt text](band196_vs_class.png) <br>
 
-Fig. 1: 
-<br>
+Figure 4: Band 196 vs Class <br>
 
-- Principal Component Analysis
-
-- Linear Discriminant Analysis
+- Linear Discriminant Analysis <br>
 
 In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
