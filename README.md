@@ -36,7 +36,7 @@ _6. Data Splitting:_
 The dataset is split into training and testing sets based on the specified ratio (--test option).<br>
 _7. Model Training:_
 The script supports various classifiers such as Random Forest (--RF), Support Vector Classifier (--SVC), Logistic Regression (--LogR), and Gaussian Naive Bayes (--GNB).
-Model training is performed using the training set, and hyperparameter tuning is conducted using GridSearchCV.
+Model training is performed using the training set, and hyperparameter tuning is conducted using GridSearchCV.<br>
 _8. Model Testing:_
 If a separate test set is specified, the trained models are applied to make predictions on the test set.
 
