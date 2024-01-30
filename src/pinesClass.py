@@ -330,7 +330,7 @@ def main(args):
       'bootstrap' : [True, False]
     }
     CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
-                          n_jobs=-1)
+                          n_jobs=-1,scoring='accuracy')
     CVpinesRF.fit(X_train, y_train)
     print(CVpinesRF.best_params_)
     jl.dump(pinesRF, os.path.join(DATA_PATH, model_name + ".gz"))
