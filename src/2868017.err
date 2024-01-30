@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/acarducc/MM/src/pinesClass.py", line 411, in <module>
+    if __name__ == "__main__": main(parser.parse_args())
+  File "/leonardo/home/userexternal/acarducc/MM/src/pinesClass.py", line 377, in main
+    pinesGNB_best = pinesGNB
+UnboundLocalError: local variable 'pinesGNB' referenced before assignment
