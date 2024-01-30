@@ -44,22 +44,22 @@ DATASET_NAME = "indian_pines_corrected"
 myDPI = 96
 
 PINE_NAME = [
-  'Roads or Barefields',
-  'Alfalfa',
-  'Corn-notill',
-  'Corn-mintill',
-  'Corn',
-  'Grass-pasture',
-  'Grass-trees',
-  'Grass-pasture-mowed',
-  'Hay-windrowed',
-  'Oats',
-  'Soybean-notill',
-  'Soybean-mintill',
-  'Soybean-clean',
-  'Wheat','Woods',
-  'Buildings Grass Trees Drives',
-  'Stone Steel Towers'
+  'Roads or Barefields',          # 0
+  'Alfalfa',                      # 1
+  'Corn-notill',                  # 2
+  'Corn-mintill',                 # 3
+  'Corn',                         # 4
+  'Grass-pasture',                # 5
+  'Grass-trees',                  # 6
+  'Grass-pasture-mowed',          # 7
+  'Hay-windrowed',                # 8
+  'Oats',                         # 9
+  'Soybean-notill',               # 10
+  'Soybean-mintill',              # 11
+  'Soybean-clean',                # 12
+  'Wheat','Woods',                # 13
+  'Buildings Grass Trees Drives', # 14
+  'Stone Steel Towers'            # 15
 ]
 def plt_attr(ylabel: str = None, xlabel: str = None,
              yscale: str = None, xscale: str = None):
@@ -321,17 +321,18 @@ def main(args):
   if args.RF:
     # Random Forest
     model_name = name + "_RF"
-    pinesRF = RandomForestClassifier(max_depth=args.RF)
-    param_grid = { 
-      'n_estimators': [200, 500],
+    pinesRF = RandomForestClassifier()
+    param_grid = {
+      'n_estimators': range(100, 500, args.RF),
       'max_features': ['auto', 'sqrt', 'log2'],
-      'max_depth' : [4,5,6,7,8],
-      'criterion' :['gini', 'entropy']
+      'max_depth' : range(15, 50, 5),
+      'criterion' : ['gini', 'entropy', 'log_loss'],
+      'bootstrap' : [True, False]
     }
-    CV_rfc = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
+    CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
                           n_jobs=-1)
-    CV_rfc.fit(X_train, y_train)
-    print(CV_rfc.best_params_)
+    CVpinesRF.fit(X_train, y_train)
+    print(CVpinesRF.best_params_)
     jl.dump(pinesRF, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our model
