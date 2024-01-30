@@ -321,15 +321,9 @@ def main(args):
   if args.RF:
     # Random Forest
     model_name = name + "_RF"
-    pinesRF = RandomForestClassifier(max_features='log2', bootstrap=False, criterion='log_loss',)
-    param_grid = {
-      'n_estimators': range(200, 400, 50),
-      'max_depth' : range(20, 40, 5),
-    }
-    CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
-                             n_jobs=-1, scoring="accuracy")
-    CVpinesRF.fit(X_train, y_train)
-    print(CVpinesRF.best_params_)
+    pinesRF = RandomForestClassifier(n_estimators=303, max_features='log2', bootstrap=False, criterion='log_loss', max_depth=32)
+    pinesRF.fit(X_train, y_train)
+    #print(CVpinesRF.best_params_)
     jl.dump(pinesRF, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our model
@@ -339,15 +333,9 @@ def main(args):
     #
     model_name = name + "_SVC"
     # Initialize SVM classifier with a parameter grid 
-    pinesSVC = SVC(kernel='rbf', coef0=0.0, degree=2, probability=True, shrinking=True, gamma='scale')
-    param_grid_svc = {
-      'C': [0.001, 0.01, 0.1, 1, 10, 200],       # Regularization parameter
-      'random_state': [42]          # Random seed for reproducibility
-    }
-    CVpinesSVC = GridSearchCV(estimator=pinesSVC, param_grid=param_grid_svc,
-                              cv=5, n_jobs=-1, scoring="accuracy")
-    CVpinesSVC.fit(X_train, y_train)
-    print(CVpinesSVC.best_params_)
+    pinesSVC = SVC(C=299, random_state=42, kernel='rbf', coef0=0.0, degree=2, probability=True, shrinking=True, gamma='scale')
+    pinesSVC.fit(X_train, y_train)
+    #print(CVpinesSVC.best_params_)
     jl.dump(pinesSVC, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our support vector model
