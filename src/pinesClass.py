@@ -373,7 +373,22 @@ def main(args):
       accuracy = accuracy_score(pred, y_test)
       print(f'Accuracy: {accuracy * 100:.2f}%')
       print(classification_report(pred, y_test, zero_division=1))
-
+      # Confusion Matrix
+      cm = confusion_matrix(pred, y_test) 
+      print("Confusion Matrix:")
+      print(cm)
+      # Display Confusion Matrix as a heatmap
+      plt.figure(figsize=(8, 6))
+      sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=PINE_NAME, yticklabels=PINE_NAME)
+      plt.title(f"Confusion Matrix - {model}")
+      plt.xlabel("Predicted")
+      plt.ylabel("True")
+        
+      # Save Confusion Matrix plot as an image
+      img_path = os.path.join(IMG_PATH, "Confusion_Matrix")
+      os.makedirs(img_path, exist_ok=True)
+      img_name = f"{model}_Confusion_Matrix.png"
+      plt.savefig(os.path.join(img_path, img_name))
   return
 
 if __name__ == "__main__": main(parser.parse_args())

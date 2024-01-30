@@ -149,41 +149,35 @@ Figure 6a.
 ![Alt text](tSNE_raw.png) <br>
 Figure 6b.
 
-Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
-The modified dataset is then standardized, fitted, transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species, to help the next multivariate classification and improve the accuracy score of the prediction. <br>
-
 - Linear Discriminant Analysis <br>
-It is a technique to reduce the dimensionality and help classification, by finding the linear combinations of features that best separate the different classes in the dataset.
+
+LDA a technique to reduce the dimensionality and help classification, by finding the linear combinations of features that best separate the different classes in the dataset.
 It is best employed before the application of a classificaton algorithm, by maximizing the distance between the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory power of the features and the accuracy of the classification.
 
+![image](https://github.com/VanuatuN/MM/assets/23639320/a95866d0-5ba0-4580-bbb3-5162cde0f491)
 
-The script checks if the dataset has been preprocessed. If not, it loads the dataset, applies standardization, and saves the preprocessed dataset.
-EDA (Exploratory Data Analysis):
-The script performs exploratory data analysis, including plotting the ground truth (target) and correlation matrix.
+Figure 7. Variance explained after application of the LDA. <br>
 
-The dataset is split into training and testing sets. Standardization (scaling) is applied using StandardScaler.
-
-We apply Principal Component Analysis to reduce dimensionality. It plots the explained variance ratio and scatter plots of principal components.
-
-If LDA is enabled, the script applies Linear Discriminant Analysis. It plots the explained variance ratio and scatter plots of linear components.
-
-Random Forest, Logistic Regression, Support Vector Classifier (SVC), and Gaussian Naive Bayes classifiers are trained. Hyperparameter tuning is performed using GridSearchCV.
-
-If testing is required, the trained models are used to predict the target values on the test set.
-
-Accuracy scores and classification reports are printed for each enabled model.
-
-Visualization:
-Various visualizations are generated, such as correlation matrices, PCA/LDA variance explained plots, and scatter plots.
-Execution Check:
-An assertion check ensures that data preprocessing has been performed before model training.
+LDA allows to significantly improve the variance explained by first 5 PCAs. 
 
 
 ## Classification report
+
+Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
+The modified dataset is then standardized, fitted, transformed tested with different classification methods. <br>
+
+Figure 8. Performance of the different methods for classification of the 
+
 ### Random Forest
 Run: python pinesClass.py -RF #
 
 ### Logistic Regression (LogR)
+
+For tge logistic regression we run the kernel PCA. 
+Principal Component Analysis (PCA) and Kernel Principal Component Analysis (Kernel PCA) are both dimensionality 
+reduction techniques. The main difference betweem those two methods is that the Kernel PCA allows for nonlinear dimensionality reduction.
+It is particularly useful when dealing with data that has nonlinear relationships, as it can capture more complex patterns. 
+In this particular case we choose the kernel with radial basis function (RBF).
 
 
 ### Support Vector Classification (SVC)
