@@ -323,8 +323,8 @@ def main(args):
     model_name = name + "_RF"
     pinesRF = RandomForestClassifier(max_features='log2', bootstrap=False, criterion='log_loss',)
     param_grid = {
-      'n_estimators': range(100, 500, 200),
-      'max_depth' : range(15, 50, 20),
+      'n_estimators': range(200, 400, 50),
+      'max_depth' : range(20, 40, 5),
     }
     CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
                              n_jobs=-1, scoring="accuracy")
