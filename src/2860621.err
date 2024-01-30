@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/leonardo/home/userexternal/acarducc/MM/src/pinesClass.py", line 398, in <module>
-    if __name__ == "__main__": main(parser.parse_args())
-  File "/leonardo/home/userexternal/acarducc/MM/src/pinesClass.py", line 216, in main
-    scaler = StandardScaler().set_output(transform="pandas")
-AttributeError: 'StandardScaler' object has no attribute 'set_output'
