@@ -8,6 +8,47 @@ Natalia
 
 # Report
 
+## Project strategy 
+
+STEP 1 Exploratory Data Analysis (EDA)<br>
+_1. Data Loading:_
+The script loads the "Indian Pines" dataset and its ground truth labels.
+The dataset includes information about different bands and their corresponding labels.
+_2. Data Preprocessing:_
+The script performs data cleaning and preprocessing steps, including standardization using StandardScaler.
+It checks if the data has been previously computed; if not, it processes the data and saves it for future use.
+3._Visualizations:_
+Visualizations of the ground truth labels and correlation matrix are generated and saved in the IMG_PATH (/img) directory.
+
+STEP 2 Dimensionality Reduction (PCA and LDA)<br>
+
+4. Principal Component Analysis (PCA):
+If PCA is enabled (--pca option), the script applies PCA to reduce the dimensionality of the data.
+Visualizations include the explained variance ratio plot and scatter plots of principal components.
+5. Linear Discriminant Analysis (LDA):
+If LDA is enabled (--lda option), the script applies LDA for further dimensionality reduction.
+Visualizations include the explained variance ratio plot and scatter plots of linear components.
+
+STEP 3: Model Training and Testing<br>
+
+6. Data Splitting:
+The dataset is split into training and testing sets based on the specified ratio (--test option).<br>
+Model Training:
+The script supports various classifiers such as Random Forest (--RF), Support Vector Classifier (--SVC), Logistic Regression (--LogR), and Gaussian Naive Bayes (--GNB).
+Model training is performed using the training set, and hyperparameter tuning is conducted using GridSearchCV.
+7. Model Testing:
+If a separate test set is specified, the trained models are applied to make predictions on the test set.
+
+Step 4: Model Evaluation and Reporting<br>
+
+8. Model Evaluation:
+For each trained model, the script evaluates its performance using metrics like accuracy, classification report, and confusion matrix.
+Output Reports:
+The script outputs various reports for each model, including accuracy, precision, recall, and F1-score.
+These reports are displayed in the console.
+
+Generally, the script provides insights into the classification performance of different machine learning models on the "Indian Pines" dataset
+
 ## Backgorund
  
 Hyperspectral data provide a lot of information for the remote discrimination of ground truth, however, since spectral dimensions are usually many, the possibility of information redundancy is presented. Data analysis and interpretation of hyperspectral images can also be a challenge. <br>
@@ -105,13 +146,35 @@ Fig. 5a:
 ![Alt text](tSNE_raw.png) <br>
 Fig. 5b:
 
-It was clear that objects from class '0' cluttered the discrepancies obtained. <br>
-Rememer we dropped the class '0', based on these preliminary Exploratory Data Analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
+Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
 The modified dataset is then standardized, fitted, transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species, to help the next multivariate classification and improve the accuracy score of the prediction. <br>
 
 - Linear Discriminant Analysis <br>
 It is a technique to reduce the dimensionality and help classification, by finding the linear combinations of features that best separate the different classes in the dataset.
 It is best employed before the application of a classificaton algorithm, by maximizing the distance between the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory power of the features and the accuracy of the classification.
+
+
+The script checks if the dataset has been preprocessed. If not, it loads the dataset, applies standardization, and saves the preprocessed dataset.
+EDA (Exploratory Data Analysis):
+The script performs exploratory data analysis, including plotting the ground truth (target) and correlation matrix.
+
+The dataset is split into training and testing sets. Standardization (scaling) is applied using StandardScaler.
+
+We apply Principal Component Analysis to reduce dimensionality. It plots the explained variance ratio and scatter plots of principal components.
+
+If LDA is enabled, the script applies Linear Discriminant Analysis. It plots the explained variance ratio and scatter plots of linear components.
+
+Random Forest, Logistic Regression, Support Vector Classifier (SVC), and Gaussian Naive Bayes classifiers are trained. Hyperparameter tuning is performed using GridSearchCV.
+
+If testing is required, the trained models are used to predict the target values on the test set.
+
+Accuracy scores and classification reports are printed for each enabled model.
+
+Visualization:
+Various visualizations are generated, such as correlation matrices, PCA/LDA variance explained plots, and scatter plots.
+Execution Check:
+An assertion check ensures that data preprocessing has been performed before model training.
+
 
 ## Classification report
 ### Random Forest
