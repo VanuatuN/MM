@@ -12,4 +12,4 @@
 #SBATCH -e %j.err
 #SBATCH -o %j.out
 
-python pinesClass.py --pca 20 --lda 10 --LogR 500
+python pinesClass.py --pca 20 --SVC -f > SVC_KPCA_20_10
