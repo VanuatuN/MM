@@ -341,10 +341,21 @@ def main(args):
   if args.SVC:
     #
     model_name = name + "_SVC"
-    # Initialize SVM classifier with a linear kernel
-    pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
-    # pinesSVC = SVC(gamma='auto')
-    pinesSVC.fit(X_train, y_train)
+    # Initialize SVM classifier with a parameter grid 
+    pinesSVC = SVC()
+    param_grid_svc = {
+      'C': [0.1, 1, 10, 100],          # Regularization parameter
+      'kernel': ['linear', 'rbf'],     # Kernel type ('linear', 'rbf', etc.)
+      'gamma': ['scale', 'auto'],      # Kernel coefficient for 'rbf' ('scale', 'auto', float)
+      'degree': [2, 3, 4],             # Degree of the polynomial kernel function ('poly' only)
+      'coef0': [0.0, 1.0, 2.0],        # Independent term in the kernel function
+      'shrinking': [True, False],      # Whether to use the shrinking heuristic
+      'probability': [True, False],    # Whether to enable probability estimates
+      'random_state': [42]             # Random seed for reproducibility
+    } 
+    CVpinesSVC = GridSearchCV(estimator=pinesSVC, param_grid=param_grid_svc, cv=5, n_jobs=-1)
+    CVpinesSVC.fit(X_train, y_train)
+    print(CVpinesSVC.best_params_)
     jl.dump(pinesSVC, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our support vector model
