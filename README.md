@@ -135,17 +135,17 @@ It was obvious that these bands were strongly correlated as well, hence any two 
 A plot of the pixel distribution of the 'Class' column for band196  is presented below:<br>
 ![Alt text](band196_vs_class.png) <br>
 
-Figure 4: Band 196 vs Class <br>
+Figure 5: Band 196 vs Class <br>
 
 - **Linear Discriminant Analysis** <br>
 
-Figure 3a and 3b show a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor Embedding (t-SNE) was used to visualize the high-dimensional raw data in lower-dimensional spaces, typically 3D and 2D respectively. <br> 
+Figure 6a and 6b show a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor Embedding (t-SNE) was used to visualize the high-dimensional raw data in lower-dimensional spaces, typically 3D and 2D respectively. <br> 
 
 ![Alt text](lda_raw.png) <br>
-Fig. 5a:
+Fig. 6a:
 
 ![Alt text](tSNE_raw.png) <br>
-Fig. 5b:
+Fig. 6b:
 
 Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
 The modified dataset is then standardized, fitted, transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species, to help the next multivariate classification and improve the accuracy score of the prediction. <br>
