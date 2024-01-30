@@ -23,27 +23,27 @@ for the classification of the same 200 bands on the satellite imagery for the ot
 
 ## Exploratory Data Analysis
 
-Importane notes: All 0 values and values of the target that covered sparsely with the data were removed, or classified as NaNs. The sparsely covered
-targets: 0, 1, 7 and 9. In the end we analyse tagets: 2,3,4,5,6,8,10-16. 13 in total, each for one type of the land. 
+_Important note_: All 0 values and values of the target that covered sparsely by the data were removed, or classified as NaNs. The sparsely covered
+targets are: 0, 1, 7 and 9. In the end we analyse tagets: 2, 3, 4, 5, 6, 8, 10-16. 13 in total, each for one type of the land. 
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bb881288-5bcd-4b7d-a19e-1010b8c00b24)
 Figure 1: 
 
-- PCA <br>
+- **PCA** <br>
 
 We first expore the data by plotting images for random bands. There are several patterns that can be observed from this simple procedure, this suggest 
 some land types are clearly distinguishable in different satellite bands.
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/2e8cf3a1-93c0-4b81-a38f-46eaa62ec35b)
 
-Figure 1. Example of the satellite images in different spectral bands. 
+Figure 2. Example of the satellite images in different spectral bands. 
 
 As a first step we apply a Pricipal Components decomposition to the 200 matrixes of the size 145x145 to see
 whether PCs are (i) distiguashable between each other and (ii) how many PCs we need to describe most of the varibility
 in the dataset. These anlysis allows to see the clusters in the data and quantify the measure of their
 "separation" to make further descision for the methods of analysis. <br>
 
-The PCs analysis shows that first 5 PCs expaling more than 92% of the total variability in the dataset.
+The PCs analysis shows that first 5 PCs expalin more than 92% of the total variability in the dataset.
 While <br>
 
 PC 1 explains 0.68 % <br>
@@ -52,14 +52,14 @@ PC 2 explains 0.19 % <br>
 There is also a clear clustering of the data points in PCs space (Figure 2), suggesting that data clusters are
 separated and can be further analysed succesfully with machine learning methods. 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bdf28b5c-0a2c-4b23-94bf-53932a34bddf)
-Figure 2. First 3 PCAs plotted in a 3D space. <br>
+Figure 3. First 3 PCAs plotted in a 3D space. <br>
 
 The next step was to check whether the reconstucted images only applying first 10 PCs would
 reflect the main features to be carptured by machine learning techniques. Figure 3 demonstrates
 those reconstructed images and we conclude that images are well reflecting the land features
 we want to classify. 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/5ac60da7-c650-4483-96f6-c79b475088dc)
-Figure 3. Reconstructed images (applying inverse transform with first 10 PCs) of for the different bands. <br>
+Figure 4. Reconstructed images (applying inverse transform with first 10 PCs) of for the different bands. <br>
 
 
 Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image were analyzed for the presence of redundancy of the data they all held.<br>
