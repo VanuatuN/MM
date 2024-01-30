@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/leonardo/home/userexternal/acarducc/MM/src/pinesClass.py", line 13, in <module>
-    from mlxtend.plotting import plot_decision_regions
-ModuleNotFoundError: No module named 'mlxtend'

@@ -345,12 +345,11 @@ def main(args):
     # Logistic Regression
     model_name = name + "_LogR"
     pinesLogR = LogisticRegression(multi_class='multinomial',
-                                   max_iter=args.LogR, tol=1E-5)
+                                   max_iter=args.LogR, tol=1E-5,
+                                   solver='lbfgs',penalty='l2',
+                                   fit_intercept=True)
     param_grid = {
-      'C': [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-      'penalty' : ["l2", None],
-      'solver' : ["newton-cg", "sag", "saga", "lbfgs"],
-      'fit_intercept' : [True, False]
+      'C': range(100, 500,100)
     }
     CVpinesLogR = GridSearchCV(estimator=pinesLogR, param_grid=param_grid,
                                cv=5, n_jobs=-1, scoring="accuracy")

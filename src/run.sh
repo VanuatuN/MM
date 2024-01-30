@@ -12,4 +12,4 @@
 #SBATCH -e %j.err
 #SBATCH -o %j.out
 
-python pinesClass.py --pca 20 --lda 10 --RF 20 --LogR 200
+python pinesClass.py --pca 20 --lda 10 --LogR 500
