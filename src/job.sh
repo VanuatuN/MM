@@ -4,7 +4,7 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --cpus-per-task=1
 #SBATCH -A ICT23_MHPC
-#SBATCH --time 0:40:00
+#SBATCH --time 3:00:00
 #SBATCH -p boost_usr_prod
 #SBATCH -e ../error-%j.err
 #SBATCH -o ../outputs/output-%j-RF16.out

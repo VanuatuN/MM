@@ -1,6 +1,6 @@
 module load profile/deeplrn
 module load cuda/11.8
-module load gcc/11.3.0
+module load gcc
 module load nccl
 module load llvm
 module load gsl
