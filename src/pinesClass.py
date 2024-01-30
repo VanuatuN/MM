@@ -321,13 +321,10 @@ def main(args):
   if args.RF:
     # Random Forest
     model_name = name + "_RF"
-    pinesRF = RandomForestClassifier()
+    pinesRF = RandomForestClassifier(max_features='log2', bootstrap=False, criterion='log_loss',)
     param_grid = {
       'n_estimators': range(100, 500, 200),
-      'max_features': ['auto', 'sqrt', 'log2'],
       'max_depth' : range(15, 50, 20),
-      'criterion' : ['gini', 'entropy', 'log_loss'],
-      'bootstrap' : [True, False]
     }
     CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
                              n_jobs=-1, scoring="f1_samples")
@@ -342,15 +339,9 @@ def main(args):
     #
     model_name = name + "_SVC"
     # Initialize SVM classifier with a parameter grid 
-    pinesSVC = SVC()
+    pinesSVC = SVC(kernel='rbf', coef0=0.0, degree=2, probability=True, shrinking=True, gamma='scale')
     param_grid_svc = {
-      'C': [0.1, 1, 10, 100],       # Regularization parameter
-      'kernel': ['linear', 'rbf'],  # Kernel type
-      'gamma': ['scale', 'auto'],   # Kernel coefficient for 'rbf'
-      'degree': [2, 3, 4],          # Degree of the polynomial kernel function
-      'coef0': [0.0, 1.0, 2.0],     # Independent term in the kernel function
-      'shrinking': [True, False],   # Whether to use the shrinking heuristic
-      'probability': [True, False], # Whether to enable probability estimates
+      'C': [0.001, 0.01, 0.1, 1, 10, 200],       # Regularization parameter
       'random_state': [42]          # Random seed for reproducibility
     }
     CVpinesSVC = GridSearchCV(estimator=pinesSVC, param_grid=param_grid_svc,
