@@ -1,0 +1,1 @@
+{'C': 100, 'fit_intercept': True, 'penalty': 'l2', 'solver': 'lbfgs'}
