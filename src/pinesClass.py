@@ -358,11 +358,28 @@ def main(args):
     # Gaussian Naive Bayes
     model_name = name + "_GNB"
     pinesGNB = GaussianNB()
-    pinesGNB.fit(X_train, y_train)
-    jl.dump(pinesGNB, os.path.join(DATA_PATH, model_name + ".gz"))
+    # Define the parameter grid for GridSearchCV
+    param_grid = {
+                   'var_smoothing': [1e-9, 1e-8, 1e-7, 1e-6, 1e-5]
+    }
+    # Create a GridSearchCV object
+    grid_search_gnb = GridSearchCV(pinesGNB, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+    # Perform GridSearchCV on the training data
+    grid_search_gnb.fit(X_train, y_train)
+    #pinesGNB.fit(X_train, y_train)
+    # best parameters from the grid search
+    best_params = grid_search_gnb.best_params_
+    print(f"Best parameters for GNB: {best_params}")
+    # Use the best model for predictions
+    pinesGNB_best = grid_search_gnb.best_estimator_
+  else:
+    # If no training data is available, just use the default model
+    pinesGNB_best = pinesGNB
+    # Save the best GNB model
+    jl.dump(pinesGNB_best, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
-      # We now test our support vector model
-      y_pred[model_name] = pinesGNB.predict(X_test)
+      # We now test our support GNB model
+      y_pred[model_name] = pinesGNB_best.predict(X_test)
     pass
 
   # Test Reports
