@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 from sklearn.preprocessing import StandardScaler
-from mlxtend.plotting import plot_decision_regions
+#from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
                             confusion_matrix, roc_curve
 from sklearn.model_selection import train_test_split, GridSearchCV
