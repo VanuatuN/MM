@@ -357,7 +357,7 @@ def main(args):
   if args.GNB:
     # Gaussian Naive Bayes
     model_name = name + "_GNB"
-    pinesGNB = GaussianNB(var_smoothening=1e-09)
+    pinesGNB = GaussianNB(var_smoothing=1e-09)
     pinesGNB.fit(X_train, y_train)
     jl.dump(pinesGNB, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
