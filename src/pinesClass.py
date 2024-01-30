@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 from sklearn.preprocessing import StandardScaler
-from mlxtend.plotting import plot_decision_regions
+#from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
                             confusion_matrix, roc_curve
 from sklearn.model_selection import train_test_split, GridSearchCV
@@ -323,14 +323,14 @@ def main(args):
     model_name = name + "_RF"
     pinesRF = RandomForestClassifier()
     param_grid = {
-      'n_estimators': range(100, 500, args.RF),
+      'n_estimators': range(100, 500, 200),
       'max_features': ['auto', 'sqrt', 'log2'],
-      'max_depth' : range(15, 50, 5),
+      'max_depth' : range(15, 50, 20),
       'criterion' : ['gini', 'entropy', 'log_loss'],
       'bootstrap' : [True, False]
     }
     CVpinesRF = GridSearchCV(estimator=pinesRF, param_grid=param_grid, cv=5,
-                          n_jobs=-1,scoring='accuracy')
+                             n_jobs=-1, scoring="f1_samples")
     CVpinesRF.fit(X_train, y_train)
     print(CVpinesRF.best_params_)
     jl.dump(pinesRF, os.path.join(DATA_PATH, model_name + ".gz"))
@@ -344,16 +344,17 @@ def main(args):
     # Initialize SVM classifier with a parameter grid 
     pinesSVC = SVC()
     param_grid_svc = {
-      'C': [0.1, 1, 10, 100],          # Regularization parameter
-      'kernel': ['linear', 'rbf'],     # Kernel type ('linear', 'rbf', etc.)
-      'gamma': ['scale', 'auto'],      # Kernel coefficient for 'rbf' ('scale', 'auto', float)
-      'degree': [2, 3, 4],             # Degree of the polynomial kernel function ('poly' only)
-      'coef0': [0.0, 1.0, 2.0],        # Independent term in the kernel function
-      'shrinking': [True, False],      # Whether to use the shrinking heuristic
-      'probability': [True, False],    # Whether to enable probability estimates
-      'random_state': [42]             # Random seed for reproducibility
-    } 
-    CVpinesSVC = GridSearchCV(estimator=pinesSVC, param_grid=param_grid_svc, cv=5, n_jobs=-1)
+      'C': [0.1, 1, 10, 100],       # Regularization parameter
+      'kernel': ['linear', 'rbf'],  # Kernel type
+      'gamma': ['scale', 'auto'],   # Kernel coefficient for 'rbf'
+      'degree': [2, 3, 4],          # Degree of the polynomial kernel function
+      'coef0': [0.0, 1.0, 2.0],     # Independent term in the kernel function
+      'shrinking': [True, False],   # Whether to use the shrinking heuristic
+      'probability': [True, False], # Whether to enable probability estimates
+      'random_state': [42]          # Random seed for reproducibility
+    }
+    CVpinesSVC = GridSearchCV(estimator=pinesSVC, param_grid=param_grid_svc,
+                              cv=5, n_jobs=-1, scoring="f1_samples")
     CVpinesSVC.fit(X_train, y_train)
     print(CVpinesSVC.best_params_)
     jl.dump(pinesSVC, os.path.join(DATA_PATH, model_name + ".gz"))
@@ -364,9 +365,18 @@ def main(args):
   if args.LogR:
     # Logistic Regression
     model_name = name + "_LogR"
-    pinesLogR = LogisticRegression(penalty=None, fit_intercept=True,
+    pinesLogR = LogisticRegression(multi_class='multinomial',
                                    max_iter=args.LogR, tol=1E-5)
-    pinesLogR.fit(X_train, y_train)
+    param_grid = {
+      'C': [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+      'penalty' : ["l2", None],
+      'solver' : ["newton-cg", "sag", "saga", "lbfgs"],
+      'fit_intercept' : [True, False]
+    }
+    CVpinesLogR = GridSearchCV(estimator=pinesLogR, param_grid=param_grid,
+                               cv=5, n_jobs=-1, scoring="f1_samples")
+    CVpinesLogR.fit(X_train, y_train)
+    print(CVpinesLogR.best_params_)
     jl.dump(pinesLogR, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our model
