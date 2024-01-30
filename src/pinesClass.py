@@ -44,16 +44,16 @@ DATASET_NAME = "indian_pines_corrected"
 myDPI = 96
 
 PINE_NAME = [
-  'Roads or Barefields',          # 0
-  'Alfalfa',                      # 1
+  #'Roads or Barefields',          # 0
+  #'Alfalfa',                      # 1
   'Corn-notill',                  # 2
   'Corn-mintill',                 # 3
   'Corn',                         # 4
   'Grass-pasture',                # 5
   'Grass-trees',                  # 6
-  'Grass-pasture-mowed',          # 7
+  #'Grass-pasture-mowed',          # 7
   'Hay-windrowed',                # 8
-  'Oats',                         # 9
+  #'Oats',                         # 9
   'Soybean-notill',               # 10
   'Soybean-mintill',              # 11
   'Soybean-clean',                # 12
