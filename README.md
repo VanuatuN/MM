@@ -12,10 +12,10 @@ Natalia
  
 Hyperspectral data provide a lot of information for the remote discrimination of ground truth, however, since spectral dimensions are usually many, the possibility of information redundancy is presented. Data analysis and interpretation of hyperspectral images can also be a challenge. <br>
 
-The goal of the group assignmnet was to exploit the tools for machine learning to analyze hyperspectral images of Indian pine fields to provide information for remote discrimination of subtle differences in the ground truth. <br>
+The goal of the group assignmnet was to explore machine learning tools to analyze hyperspectral images of Indian pine fields to classify land surfaces according to the groud truth proveded. <br>
 
 The dataset consists of 200 satellite images of the same area, each corresponds to the one spectral band of the remote sensor. We expect different types of the land surface 
-to have a different reflectivity among those 200 bands. We will make at attempte to classify land types according to their representation on images in different bands. <br>
+to have a different reflectivity among those 200 bands. We will make at attempt to classify land types according to their representation on images in different bands. <br>
 
 We also have a "reference": the images that contains "target": classified patters of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
 Assuming we trained our model on this dataset, e.g. managed to predic the type of the land surface on the satellte imagery this can further be applied
@@ -23,7 +23,8 @@ for the classification of the same 200 bands on the satellite imagery for the ot
 
 ## Exploratory Data Analysis
 
-Importane notes: All 0 values and values of the target that covered sparsely with the data were removed, or classified as NaNs.
+Importane notes: All 0 values and values of the target that covered sparsely with the data were removed, or classified as NaNs. The sparsely covered
+targets: 0, 1, 7 and 9. In the end we analyse tagets: 2,3,4,5,6,8,10-16. 13 in total, each for one type of the land. 
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bb881288-5bcd-4b7d-a19e-1010b8c00b24)
 Figure 1: 
