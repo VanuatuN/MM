@@ -22,6 +22,12 @@ Assuming we trained our model on this dataset, e.g. managed to predic the type o
 for the classification of the same 200 bands on the satellite imagery for the other areas. <br>
 
 ## Exploratory Data Analysis
+
+Importane notes: All 0 values and values of the target that covered sparsely with the data were removed, or classified as NaNs.
+
+![image](https://github.com/VanuatuN/MM/assets/23639320/bb881288-5bcd-4b7d-a19e-1010b8c00b24)
+Figure 1: 
+
 - PCA <br>
 
 We first expore the data by plotting images for random bands. There are several patterns that can be observed from this simple procedure, this suggest 
