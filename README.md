@@ -69,7 +69,7 @@ _Important note_: All 0 values and values of the target that covered sparsely by
 targets are: 0, 1, 7 and 9. In the end we analyse tagets: 2, 3, 4, 5, 6, 8, 10-16. 13 in total, each for one type of the land. 
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bb881288-5bcd-4b7d-a19e-1010b8c00b24)
-Figure 1: 
+Figure 1: Binned distriburion of the image cells with different features (e.g. land types).
 
 - **PCA** <br>
 
