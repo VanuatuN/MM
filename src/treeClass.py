@@ -7,6 +7,8 @@ import joblib as jl
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 from sklearn.preprocessing import StandardScaler
 from mlxtend.plotting import plot_decision_regions
 from sklearn.metrics import accuracy_score, classification_report, \
@@ -16,8 +18,6 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 # Exploratory Data Analysis (EDA)
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-
-
 
 # Logistic Regression (LogR)
 from sklearn.linear_model import LogisticRegression
@@ -40,7 +40,6 @@ DATASET_NAME = "indian_pines_corrected"
 
 myDPI = 96
 
-
 def plt_attr(ylabel: str = None, xlabel: str = None,
              yscale: str = None, xscale: str = None):
   if xlabel is not None: plt.xlabel(xlabel)
@@ -48,7 +47,6 @@ def plt_attr(ylabel: str = None, xlabel: str = None,
   if yscale is not None: plt.yscale(yscale)
   if ylabel is not None: plt.ylabel(ylabel)
   return
-
 
 def restricted_float(x):
   try:
@@ -138,11 +136,11 @@ def plt_sc(x, y, path: str, name: str, ylabel: str = None, xlabel: str = None,
     ax.set_ylabel(ylabel)
     ax.set_zlabel(zlabel)
   plt.savefig(os.path.join(path, name + ".png"))
-  #plt.close()  # Close the figure to release resources
+  plt.close()  # Close the figure to release resources
   return
 
 def main(args):
-  myDataSet = os.path.join(DATA_PATH, DATASET_STR + ".pkl")
+  myDataSet = os.path.join(DATA_PATH, TARGET_STR + DATASET_STR + ".pkl")
   # Exploratory Data Analysis (EDA)
   SECTION = "EDA"
   if args.force or not os.path.isfile(myDataSet):
@@ -154,10 +152,9 @@ def main(args):
     X = pd.DataFrame(X.reshape(-1, X_SHAPE[2]), columns=FEATURES)
     X[TARGET_STR] = loadmat(TARGET_PATH)[TARGET_NAME].flatten()
     X.loc[X[TARGET_STR] != 0, TARGET_STR] = 1
-
-    #print(X)
     X[FEATURES + [TARGET_STR]].to_pickle(myDataSet)
-    with open(os.path.join(DATA_PATH, "Datashape.json"), 'w') as fp:
+    with open(os.path.join(DATA_PATH, f"{TARGET_STR}_Datashape.json"),
+              'w') as fp:
       json.dump({x: y for x, y in zip(['X', 'Y', 'Z'], X_SHAPE)}, fp)
 
     ## Plot truth
@@ -165,7 +162,8 @@ def main(args):
           os.path.join(IMG_PATH, SECTION), TARGET_STR)
   else:
     X = pd.read_pickle(myDataSet)
-    with open(os.path.join(DATA_PATH, "Datashape.json"), 'r') as fp:
+    with open(os.path.join(DATA_PATH, f"{TARGET_STR}_Datashape.json"),
+              'r') as fp:
       myDict = json.load(fp)
       X_SHAPE = [myDict[x] for x in ['X', 'Y', 'Z']]
     FEATURES = X.columns.values[:-1]
@@ -177,17 +175,18 @@ def main(args):
     X_train, X_test, y_train, y_test = train_test_split(
       X[FEATURES], X[TARGET_STR], test_size=args.test, random_state=1,
       stratify=X[TARGET_STR])
-    pd.concat([X_test, y_test]).to_csv(os.path.join(DATA_PATH, "DataTest.csv"))
+    pd.concat([X_test, y_test]).to_csv(
+      os.path.join(DATA_PATH, f"{TARGET_STR}_DataTest.csv"))
     scaler.fit(X_train)
-    jl.dump(scaler, os.path.join(DATA_PATH, "scaler.gz"))
+    jl.dump(scaler, os.path.join(DATA_PATH, f"{TARGET_STR}_scaler.gz"))
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
   elif args.test == 1.0:
     # TEST
     X_train = None
     y_train = None
-    myData = pd.read_csv(os.path.join(DATA_PATH, "DataTest.csv"))
-    scaler = jl.load(os.path.join(DATA_PATH, "scaler.gz"))
+    myData = pd.read_csv(os.path.join(DATA_PATH, f"{TARGET_STR}_DataTest.csv"))
+    scaler = jl.load(os.path.join(DATA_PATH, f"{TARGET_STR}_scaler.gz"))
     X_test = scaler.transform(myData[FEATURES])
     y_test = myData[TARGET_STR]
   else:
@@ -200,18 +199,14 @@ def main(args):
     X_test = None
     y_test = None
 
-
   CORR = np.abs(X.corr())
   sns_im(CORR, os.path.join(IMG_PATH, SECTION), "Correlation_Mtx")
   FEATURES_RELEVANT = CORR[CORR[TARGET_STR] > 0.2]
-  mytarget=CORR[TARGET_STR].sort_values().to_numpy()
-  trace=np.sum(mytarget)
-  print(np.sum(mytarget[-42:-1])/trace)
-  name = ""
+  name = TARGET_STR
   if args.pca != 0:
     # Principal Component Analysis (PCA)
     pinesPCA = PCA(n_components=args.pca, svd_solver="full")
-    name += f"PCA_{args.pca:03}"
+    name += f"_PCA_{args.pca:03}"
     myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
     if args.force or not os.path.isfile(myDataSet):
       pinesPCA.set_output(transform="pandas")
@@ -229,7 +224,6 @@ def main(args):
              xlabel="Principal Component 1",
              ylabel="Principal Component 2",
              zlabel="Principal Component 3")
-      plt.show()
     else:
       myData = pd.read_pickle(myDataSet)
       X_train = myData[[C for C in myData.columns if C != TARGET_STR]]
@@ -238,11 +232,9 @@ def main(args):
         pinesPCA = jl.load(os.path.join(DATA_PATH, name + ".gz"))
         X_test = pinesPCA.transform(X_test)
 
-  
-
   # WARNING: If the following assertion fails, then the Data has not been
   #          preprocessed
-  assert name != ""
+  assert name != TARGET_STR
   y_pred = dict()
   # CLASSIFIERS
   if args.RF:
@@ -250,6 +242,7 @@ def main(args):
     model_name = name + "_RF"
     pinesRF = RandomForestClassifier(max_depth=args.RF)
     pinesRF.fit(X_train, y_train)
+    jl.dump(pinesRF, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our model
       y_pred[model_name] = pinesRF.predict(X_test)
@@ -257,10 +250,9 @@ def main(args):
   if args.SVC:
     #
     model_name = name + "_SVC"
-    # Initialize SVM classifier with a linear kernel
-    #pinesSVC = SVC(kernel='linear', C=1.0, random_state=42)
     pinesSVC = SVC(gamma='auto')
     pinesSVC.fit(X_train, y_train)
+    jl.dump(pinesSVC, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our support vector model
       y_pred[model_name] = pinesSVC.predict(X_test)
@@ -271,6 +263,7 @@ def main(args):
     pinesLogR = LogisticRegression(penalty=None, fit_intercept=True,
                                    max_iter=args.LogR, tol=1E-5)
     pinesLogR.fit(X_train, y_train)
+    jl.dump(pinesLogR, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our model
       y_pred[model_name] = pinesLogR.predict(X_test)
@@ -280,6 +273,7 @@ def main(args):
     model_name = name + "_GNB"
     pinesGNB = GaussianNB()
     pinesGNB.fit(X_train, y_train)
+    jl.dump(pinesGNB, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our support vector model
       y_pred[model_name] = pinesGNB.predict(X_test)
