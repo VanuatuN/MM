@@ -86,10 +86,8 @@ It was obvious that these bands were strongly correlated as well, hence any two 
 A plot of the pixel distribution of the 'Class' column for band196  is presented below:<br>
 ![Alt text](band196_vs_class.png) <br>
 
-Fig. 4: 
-<br>
+Figure 4: Band 196 vs Class <br>
 
-
-- Linear Discriminant Analysis
+- Linear Discriminant Analysis <br>
 
 In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
