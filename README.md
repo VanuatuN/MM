@@ -11,6 +11,7 @@ Natalia
 ## Project strategy 
 
 STEP 1 Exploratory Data Analysis (EDA)<br>
+
 _1. Data Loading:_
 The script loads the "Indian Pines" dataset and its ground truth labels.
 The dataset includes information about different bands and their corresponding labels.
@@ -22,26 +23,26 @@ Visualizations of the ground truth labels and correlation matrix are generated a
 
 STEP 2 Dimensionality Reduction (PCA and LDA)<br>
 
-4. Principal Component Analysis (PCA):
+_4. Principal Component Analysis (PCA):_
 If PCA is enabled (--pca option), the script applies PCA to reduce the dimensionality of the data.
 Visualizations include the explained variance ratio plot and scatter plots of principal components.
-5. Linear Discriminant Analysis (LDA):
+_5. Linear Discriminant Analysis (LDA):_
 If LDA is enabled (--lda option), the script applies LDA for further dimensionality reduction.
 Visualizations include the explained variance ratio plot and scatter plots of linear components.
 
 STEP 3: Model Training and Testing<br>
 
-6. Data Splitting:
+_6. Data Splitting:_
 The dataset is split into training and testing sets based on the specified ratio (--test option).<br>
-Model Training:
+_7. Model Training:_
 The script supports various classifiers such as Random Forest (--RF), Support Vector Classifier (--SVC), Logistic Regression (--LogR), and Gaussian Naive Bayes (--GNB).
 Model training is performed using the training set, and hyperparameter tuning is conducted using GridSearchCV.
-7. Model Testing:
+_8. Model Testing:_
 If a separate test set is specified, the trained models are applied to make predictions on the test set.
 
-Step 4: Model Evaluation and Reporting<br>
+STEP 4: Model Evaluation and Reporting<br>
 
-8. Model Evaluation:
+_9. Model Evaluation:_
 For each trained model, the script evaluates its performance using metrics like accuracy, classification report, and confusion matrix.
 Output Reports:
 The script outputs various reports for each model, including accuracy, precision, recall, and F1-score.
