@@ -43,12 +43,10 @@ If a separate test set is specified, the trained models are applied to make pred
 STEP 4: Model Evaluation and Reporting<br>
 
 _9. Model Evaluation:_
-For each trained model, the script evaluates its performance using metrics like accuracy, classification report, and confusion matrix.
-Output Reports:
-The script outputs various reports for each model, including accuracy, precision, recall, and F1-score.
-These reports are displayed in the console. <br>
+For each trained model, the script evaluates its performance using metrics like accuracy, classification report, confusion matrix,
+precision, recall, and F1-score. These reports are displayed in the console. <br>
 
-Generally, the script provides insights into the classification performance of different machine learning models on the "Indian Pines" dataset
+Generally, our script provides insights into the classification performance of different machine learning models on the "Indian Pines" dataset.<br>
 
 ## Backgorund
  
