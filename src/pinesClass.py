@@ -16,7 +16,7 @@ from sklearn.metrics import accuracy_score, classification_report, \
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Exploratory Data Analysis (EDA)
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA,KernelPCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 # Random Forest (RF)
@@ -251,7 +251,7 @@ def main(args):
   name = TARGET_STR
   if args.pca != 0:
     # Principal Component Analysis (PCA)
-    pinesPCA = PCA(n_components=args.pca, svd_solver="full")
+    pinesPCA = KernelPCA(n_components=args.pca, kernel='rbf',n_jobs=-1)
     name += f"_PCA_{args.pca:03}"
     myDataSet = os.path.join(DATA_PATH, DATASET_STR + name + ".pkl")
     if args.force or not os.path.isfile(myDataSet):
@@ -262,9 +262,9 @@ def main(args):
       pd.concat([X_train, y_train], axis=1).to_pickle(myDataSet)
       PC1, PC2, PC3 = X_train[
                         pinesPCA.get_feature_names_out()[:3]].to_numpy().T
-      plt_pl(pinesPCA.explained_variance_ratio_,
-             os.path.join(IMG_PATH, SECTION), name + "_VarExp", yscale="log",
-             xlabel="Principal Components", ylabel="Variance Explained")
+      #plt_pl(pinesPCA.explained_variance_ratio_,
+      #       os.path.join(IMG_PATH, SECTION), name + "_VarExp", yscale="log",
+      #       xlabel="Principal Components", ylabel="Variance Explained")
       plt_sc(PC1, PC2, os.path.join(IMG_PATH, SECTION),
              name + "_" + TARGET_STR, c=y_train, z=PC3,
              xlabel="Principal Component 1",
@@ -347,14 +347,8 @@ def main(args):
     pinesLogR = LogisticRegression(multi_class='multinomial',
                                    max_iter=args.LogR, tol=1E-5,
                                    solver='lbfgs',penalty='l2',
-                                   fit_intercept=True)
-    param_grid = {
-      'C': range(100, 500,100)
-    }
-    CVpinesLogR = GridSearchCV(estimator=pinesLogR, param_grid=param_grid,
-                               cv=5, n_jobs=-1, scoring="accuracy")
-    CVpinesLogR.fit(X_train, y_train)
-    print(CVpinesLogR.best_params_)
+                                   fit_intercept=True,C=115)
+    pinesLogR.fit(X_train, y_train)
     jl.dump(pinesLogR, os.path.join(DATA_PATH, model_name + ".gz"))
     if X_test is not None:
       # We now test our model
