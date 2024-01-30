@@ -164,7 +164,7 @@ LDA allows to significantly improve the variance explained by first 5 PCAs.
 ## Classification report
 
 Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
-The modified dataset is then standardized, fitted, transformed and a binary classification is performed on it using the Random Forest classifier. We consider only the output of the model which predicts the presence of pine species, to help the next multivariate classification and improve the accuracy score of the prediction. <br>
+The modified dataset is then standardized, fitted, transformed tested with different classification methods. <br>
 
 Figure 8. Performance of the different methods for classification of the 
 
