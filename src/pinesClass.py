@@ -323,9 +323,9 @@ def main(args):
     model_name = name + "_RF"
     pinesRF = RandomForestClassifier()
     param_grid = {
-      'n_estimators': range(100, 500, args.RF),
+      'n_estimators': range(100, 500, 200),
       'max_features': ['auto', 'sqrt', 'log2'],
-      'max_depth' : range(15, 50, 5),
+      'max_depth' : range(15, 50, 20),
       'criterion' : ['gini', 'entropy', 'log_loss'],
       'bootstrap' : [True, False]
     }
