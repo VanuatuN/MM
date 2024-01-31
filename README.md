@@ -48,7 +48,7 @@ precision, recall, and F1-score. These reports are displayed in the console. <br
 
 Generally, our script provides insights into the classification performance of different machine learning models on the "Indian Pines" dataset.<br>
 
-## Backgorund
+## Background
  
 Hyperspectral data provide a lot of information for the remote discrimination of ground truth, however, since spectral dimensions are usually many, the possibility of information redundancy is presented. Data analysis and interpretation of hyperspectral images can also be a challenge. <br>
 
