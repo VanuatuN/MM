@@ -185,4 +185,4 @@ In this particular case we choose the kernel with radial basis function (RBF).
 
 
 
-In supervised learning, a training data set consisting of input–output pairs is available, and a Machine Learning algorithm is trained with the goal of providing predictions of the desired output for unseen input values.
+Overall, the Support Vector Classifier (SVC) with PCA appears to be the best-performing model among all tested, achieving the highest accuracy and balanced class-wise metrics. Random Forest (RF) models also perform well across various configurations. Logistic regression models show moderate performance, and the choice between them might depend on specific considerations, such as interpretability and computational efficiency.
