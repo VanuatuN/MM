@@ -109,7 +109,7 @@ Exploratory Data analysis of our choice focused on, first understanding the data
 This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
 
 
-The correlation coefficients of the bands with the class (specie) column was analyzed. The highest correlation coefficient was estimated to be ~ 0.23. Selected Bands with Correlation Coefficient >= 0.238 with the Class (Specie) Column were as follows:<br>
+The correlation coefficients of the bands with the class (specie) column was also analyzed. The highest correlation coefficient was estimated to be ~ 0.23. Selected Bands with Correlation Coefficient >= 0.238 with the Class (Specie) Column were as follows:<br>
 
 | Band ID | Correlation Coefficient with the Class Column |
 |---------|----------------------------------------------|
@@ -141,7 +141,7 @@ Figure 5: Band 196 vs Class <br>
 
 - **Linear Discriminant Analysis** <br>
 
-Figure 6a and 6b show a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor Embedding (t-SNE) was used to visualize the high-dimensional raw data in lower-dimensional spaces, typically 3D and 2D respectively. <br> 
+Figure 6a and 6b demostrate results of a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor Embedding (t-SNE). <br> 
 
 ![Alt text](lda_raw.png) <br>
 Figure 6a.
