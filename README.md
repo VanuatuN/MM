@@ -149,8 +149,6 @@ Figure 6a.
 ![Alt text](tSNE_raw.png) <br>
 Figure 6b.
 
-- Linear Discriminant Analysis <br>
-
 LDA a technique to reduce the dimensionality and help classification, by finding the linear combinations of features that best separate the different classes in the dataset.
 It is best employed before the application of a classificaton algorithm, by maximizing the distance between the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory power of the features and the accuracy of the classification.
 
