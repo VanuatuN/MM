@@ -161,13 +161,15 @@ LDA allows to significantly improve the variance explained by first 5 PCAs.
 
 ## Classification report
 
-Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
-The modified dataset is then standardized, fitted, transformed tested with different classification methods. <br>
+Note that we dropped class '0' (likely covers the areas that not meant to be classified), based on a preliminary data analysis of the raw dataset we have also dropped other sparsely covered with data classes (e.g. classes 1,7 and 9, where there were too few samples). <br> 
+The modified dataset is then standardized, fitted, transformed and tested with different classification methods. <br>
 ![Alt text](accuracies.png) <br>
 Figure 8. Accuracy performance of the different methods for classification of the land surface in the "Indian Pines" dataset. 
 
+Overall, the Support Vector Classifier (SVC) with PCA appears to be the best-performing model among all tested, achieving the highest accuracy (83.3%) and balanced class-wise metrics. Random Forest (RF) models also perform well across various configurations. Logistic regression models show moderate performance, and the choice between them might depend on specific considerations, such as interpretability and computational efficiency.
+
 ### Random Forest
-Run: python pinesClass.py -RF #
+
 
 ### Logistic Regression (LogR)
 
@@ -185,4 +187,4 @@ In this particular case we choose the kernel with radial basis function (RBF).
 
 
 
-Overall, the Support Vector Classifier (SVC) with PCA appears to be the best-performing model among all tested, achieving the highest accuracy and balanced class-wise metrics. Random Forest (RF) models also perform well across various configurations. Logistic regression models show moderate performance, and the choice between them might depend on specific considerations, such as interpretability and computational efficiency.
+
