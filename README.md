@@ -173,7 +173,7 @@ It is aslo importrant to notice that additional projection of the PC transformed
 
 The worst performing method od GNB, it gives 70% of accurace for all tested configurations of PCA and LDA. 
 
-# Metrics of performance 
+### Metrics of performance 
 
 Precision, recall, F1-score, and support are metrics for evaluations of the performance of classification models.
 These metrics are derived from the confusion matrix, which summarizes the performance of a classification algorithm. 
