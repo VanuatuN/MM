@@ -1,4 +1,4 @@
-Target_PCA_042_LDA_012_SVC
+Target_KPCA_042_LDA_012_SVC
 Accuracy: 82.93%
               precision    recall  f1-score   support
 
