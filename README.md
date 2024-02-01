@@ -168,6 +168,10 @@ Figure 8. Accuracy performance of the different methods for classification of th
 
 Overall, the Support Vector Classifier (SVC) with PCA appears to be the best-performing model among all tested, achieving the highest accuracy (83.3%) and balanced class-wise metrics. Random Forest (RF) models also perform well across various configurations. Logistic regression models show moderate performance, and the choice between them might depend on specific considerations, such as interpretability and computational efficiency.
 
+
+It is aslo importrant to notice that additional projection of the PC transformed data into LDs space gives additional almost 5% of the accuracy for the Random Forest classification, while for the SVC method it decreases accuracy (only 2% decrease).
+
+
 ### Random Forest
 
 
