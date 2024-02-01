@@ -209,6 +209,7 @@ _True Negatives (TN):_ Correct prediction of the negative class.
 _False Positives (FP):_ Incorrect prediction of the positive class when the true class is negative (Type I error).
 _False Negatives (FN):_ Incorrect prediction of the negative class when the true class is positive (Type II error).
 
+------------------|--------------------|--------------------|
                   | Predicted Negative | Predicted Positive |
 ------------------|--------------------|--------------------|
 Actual Negative   |        TN          |        FP          |
