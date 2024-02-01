@@ -218,9 +218,11 @@ In this particular case we choose the kernel with radial basis function (RBF).
 ### Support Vector Classification (SVC)
 
 ADD CONFISION MATRIX AS THE BEST PERFROMING 
-
+![Alt text](img/Confusion_Matrix/Target_PCA_020_SVC_Confusion_Matrix.png) <br>
 
 ### Gaussian Naive Bayes (Gaussian NB)
+
+![Alt text](img/Confusion_Matrix/Target_PCA_020_GNB_Confusion_Matrix.png)<br>
 
 ADD CONFISION MATRIX AS THE WORST PERFROMING 
 
