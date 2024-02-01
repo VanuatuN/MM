@@ -163,8 +163,8 @@ LDA allows to significantly improve the variance explained by first 5 PCAs.
 
 Rememer we dropped the class '0', based on these preliminary data analysis on the raw dataset as well as other sparsely covered with data classes. <br> 
 The modified dataset is then standardized, fitted, transformed tested with different classification methods. <br>
-
-Figure 8. Performance of the different methods for classification of the 
+![Alt text](accuracies.png) <br>
+Figure 8. Accuracy performance of the different methods for classification of the land surface in the "Indian Pines" dataset. 
 
 ### Random Forest
 Run: python pinesClass.py -RF #
