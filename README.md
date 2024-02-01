@@ -198,9 +198,26 @@ _Support:_
 Support represents the number of actual occurrences of the class in the specified dataset. It is the number of trues for each class.
 Support is not a measure of the model's performance but rather provides context for the other metrics.
 
+_Confusion matrix_
+
+The confusion matrix allows to evaluate the performance of a classification models. 
+In the confusion matrix we see the predictions made by a model on a dataset and comparision of them to the actual labels. 
+It operates with true positives (TP), true negatives (TN), false positives (FP), and false negatives (FN) values.
+
+_True Positives (TP):_ Correct prediction of the positive class.
+_True Negatives (TN):_ Correct prediction of the negative class.
+_False Positives (FP):_ Incorrect prediction of the positive class when the true class is negative (Type I error).
+_False Negatives (FN):_ Incorrect prediction of the negative class when the true class is positive (Type II error).
+
+                  | Predicted Negative | Predicted Positive |
+------------------|--------------------|--------------------|
+Actual Negative   |        TN          |        FP          |
+------------------|--------------------|--------------------|
+Actual Positive   |        FN          |        TP          |
 
 
-**Figure 9.** Metric of the performance of classification models. 
+
+**Figure 9.** Calculated metrics of the performance of classification models for all method in this study. 
 
 
 ### Random Forest
