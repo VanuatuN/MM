@@ -173,6 +173,34 @@ It is aslo importrant to notice that additional projection of the PC transformed
 
 The worst performing method od GNB, it gives 70% of accurace for all tested configurations of PCA and LDA. 
 
+### Metrics of performance 
+
+Precision, recall, F1-score, and support are metrics for evaluations of the performance of classification models.
+These metrics are derived from the confusion matrix, which summarizes the performance of a classification algorithm. 
+
+_Precision:_
+Precision is a positive predictive value, calculated as the ratio of true positive predictions to the sum of true positives and false positives.
+High precision indicates model predicting a positive class, that is likely to be correct.
+
+
+_Recall:_
+Recall is a sensitivity or true positive rate, measures the ability of the model to capture all the positive instances. 
+It is calculated as the ratio of true positives to the sum of true positives and false negatives.
+High recall indicates that the model is effective at identifying most of the positive instances.
+
+_F1-Score:_
+
+The F1-score is the harmonic mean of precision and recall. It provides a balance between precision and recall, it is useful when there is an uneven class distribution.
+The F1-score ranges from 0 to 1, where a higher value indicates better overall performance.
+
+
+_Support:_
+Support represents the number of actual occurrences of the class in the specified dataset. It is the number of trues for each class.
+Support is not a measure of the model's performance but rather provides context for the other metrics.
+
+
+
+Figure 9. Metric of the performance of classification models. 
 
 
 ### Random Forest
@@ -189,8 +217,12 @@ In this particular case we choose the kernel with radial basis function (RBF).
 
 ### Support Vector Classification (SVC)
 
+ADD CONFISION MATRIX AS THE BEST PERFROMING 
+
 
 ### Gaussian Naive Bayes (Gaussian NB)
+
+ADD CONFISION MATRIX AS THE WORST PERFROMING 
 
 
 
