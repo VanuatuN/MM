@@ -210,16 +210,16 @@ _False Negatives (FN):_ Incorrect prediction of the negative class when the true
 
 
 1. **Precision:**
-   Precision measures the accuracy of positive predictions. It is the ratio of true positives to the sum of true positives and false positives.
-   \[ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} \]
+   Precision measures the accuracy of positive predictions. It is the ratio of true positives to the sum of true positives and false positives.<br>
+   Precision = TP / (TP + FP)
 
 2. **Recall (Sensitivity or True Positive Rate):**
-   Recall measures the ability of the model to capture all positive instances. It is the ratio of true positives to the sum of true positives and false negatives.
-   \[ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} \]
+   Recall measures the ability of the model to capture all positive instances. It is the ratio of true positives to the sum of true positives and false negatives.<br>
+   Recall = TP / (TP + FN)
 
 3. **F1-Score:**
-   The F1-score is the harmonic mean of precision and recall. It provides a balance between precision and recall.
-   \[ \text{F1-Score} = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \]
+   The F1-score is the harmonic mean of precision and recall. It provides a balance between precision and recall.<br>
+   F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
 
 
 
