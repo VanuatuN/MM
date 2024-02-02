@@ -10,7 +10,7 @@ Natalia
 
 ## Project strategy 
 
-STEP 1 Exploratory Data Analysis (EDA)<br>
+**STEP 1** Exploratory Data Analysis (EDA)<br>
 
 _1. Data Loading:_
 The script loads the "Indian Pines" dataset and its ground truth labels.
@@ -19,9 +19,9 @@ _2. Data Preprocessing:_
 The script performs data cleaning and preprocessing steps, including standardization using StandardScaler.
 It checks if the data has been previously computed; if not, it processes the data and saves it for future use.<br>
 3._Visualizations:_
-Visualizations of the ground truth labels and correlation matrix are generated and saved in the IMG_PATH (/img) directory.<br>
+Visualizations of the ground truth labels and correlation matrix.<br>
 
-STEP 2 Dimensionality Reduction (PCA and LDA)<br>
+**STEP 2** Dimensionality Reduction (PCA and LDA)<br>
 
 _4. Principal Component Analysis (PCA):_
 If PCA is enabled (--pca option), the script applies PCA to reduce the dimensionality of the data.
@@ -30,17 +30,16 @@ _5. Linear Discriminant Analysis (LDA):_
 If LDA is enabled (--lda option), the script applies LDA for further dimensionality reduction.
 Visualizations include the explained variance ratio plot and scatter plots of linear components.<br>
 
-STEP 3: Model Training and Testing<br>
+**STEP 3** Model Training and Testing<br>
 
 _6. Data Splitting:_
 The dataset is split into training and testing sets based on the specified ratio (--test option).<br>
 _7. Model Training:_
-The script supports various classifiers such as Random Forest (--RF), Support Vector Classifier (--SVC), Logistic Regression (--LogR), and Gaussian Naive Bayes (--GNB).
-Model training is performed using the training set, and hyperparameter tuning is conducted using GridSearchCV.<br>
+The script supports various classifiers such as Random Forest (--RF), Support Vector Classifier (--SVC), Logistic Regression (--LogR), and Gaussian Naive Bayes (--GNB). Model training is performed using the training set, and hyperparameter tuning is conducted using GridSearchCV.<br>
 _8. Model Testing:_
 If a separate test set is specified, the trained models are applied to make predictions on the test set.<br>
 
-STEP 4: Model Evaluation and Reporting<br>
+**STEP 4** Model Evaluation and Reporting<br>
 
 _9. Model Evaluation:_
 For each trained model, the script evaluates its performance using metrics like accuracy, classification report, confusion matrix,
@@ -210,15 +209,15 @@ _False Negatives (FN):_ Incorrect prediction of the negative class when the true
 | Actual Positive |        FN          |        TP          |
 
 
-**Precision:**
+1. **Precision:**
    Precision measures the accuracy of positive predictions. It is the ratio of true positives to the sum of true positives and false positives.
-   \[ \text{Precision} = \frac{TP}{TP + FP} \]
+   \[ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} \]
 
-**Recall (Sensitivity or True Positive Rate):**
+2. **Recall (Sensitivity or True Positive Rate):**
    Recall measures the ability of the model to capture all positive instances. It is the ratio of true positives to the sum of true positives and false negatives.
-   \[ \text{Recall} = \frac{TP}{TP + FN} \]
+   \[ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} \]
 
-**F1-Score:**
+3. **F1-Score:**
    The F1-score is the harmonic mean of precision and recall. It provides a balance between precision and recall.
    \[ \text{F1-Score} = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \]
 
