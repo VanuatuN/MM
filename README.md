@@ -101,14 +101,32 @@ we want to classify.
 ![image](https://github.com/VanuatuN/MM/assets/23639320/5ac60da7-c650-4483-96f6-c79b475088dc)
 **Figure 4.** Reconstructed images (applying inverse transform with first 10 PCs) of for the different bands. <br>
 
+- **Kernel Principal Components Analysis** <br>
 
-Exploratory Data analysis of our choice focused on, first understanding the dataset probing the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image were analyzed for the presence of redundancy of the data they all held.<br> 
+We did all final runs and provide analytic report with KPCA methond for data decomposition,
+it demostrated better performance in comparison to PCA. Principal Component Analysis (PCA) 
+and Kernel Principal Component Analysis (Kernel PCA) are both dimensionality 
+reduction techniques. The main difference betweem those two methods is that the Kernel PCA 
+allows for nonlinear dimensionality reduction.
+It is particularly useful when dealing with data that has nonlinear relationships, 
+as it can capture more complex patterns. 
+In this particular case we choose the kernel with radial basis function (RBF).
+
+- **Remarks** <br>
+
+Exploratory Data analysis of our choice focused on, first understanding the dataset probing 
+the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image 
+were analyzed for the presence of redundancy of the data they all held.<br> 
 
 
-This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
+This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 
+had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation 
+between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
 
 
-The correlation coefficients of the bands with the class (specie) column was also analyzed. The highest correlation coefficient was estimated to be ~ 0.23. Selected Bands with Correlation Coefficient >= 0.238 with the Class (Specie) Column were as follows:<br>
+The correlation coefficients of the bands with the class (specie) column was also analyzed.
+The highest correlation coefficient was estimated to be ~ 0.23. Selected Bands with Correlation
+Coefficient >= 0.238 with the Class (Specie) Column were as follows:<br>
 
 | Band ID | Correlation Coefficient with the Class Column |
 |---------|----------------------------------------------|
@@ -131,7 +149,8 @@ The correlation coefficients of the bands with the class (specie) column was als
 | band196 | 0.240277                                     |
 
 
-It was obvious that these bands were strongly correlated as well, hence any two of them, could most probably be used to train an algorithm to make predictions. <br>
+It was obvious that these bands were strongly correlated as well, hence any two of them, could most 
+probably be used to train an algorithm to make predictions. <br>
 
 A plot of the pixel distribution of the 'Class' column for band196  is presented below:<br>
 ![Alt text](band196_vs_class.png) <br>
@@ -140,7 +159,8 @@ A plot of the pixel distribution of the 'Class' column for band196  is presented
 
 - **Linear Discriminant Analysis** <br>
 
-Figure 6a and 6b demostrate results of a simple Linear Discriminant Analysis (LDA) and a t-Distributed Stochastic Neighbor Embedding (t-SNE). <br> 
+Figure 6a and 6b demostrate results of a simple Linear Discriminant Analysis (LDA) and a t-Distributed
+Stochastic Neighbor Embedding (t-SNE). <br> 
 
 ![Alt text](lda_raw.png) <br>
 **Figure 6a.**
@@ -148,27 +168,35 @@ Figure 6a and 6b demostrate results of a simple Linear Discriminant Analysis (LD
 ![Alt text](tSNE_raw.png) <br>
 **Figure 6b.**
 
-LDA a technique to reduce the dimensionality and help classification, by finding the linear combinations of features that best separate the different classes in the dataset.
-It is best employed before the application of a classificaton algorithm, by maximizing the distance between the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory power of the features and the accuracy of the classification.
+LDA a technique to reduce the dimensionality and help classification, by finding the linear combinations 
+of features that best separate the different classes in the dataset.
+It is best employed before the application of a classificaton algorithm, by maximizing the distance between
+the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory
+power of the features and the accuracy of the classification.
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/a95866d0-5ba0-4580-bbb3-5162cde0f491)
 
-**Figure 7. **Variance explained after application of the LDA. <br>
+**Figure 7.** Variance explained after application of the LDA. <br>
 
 LDA allows to significantly improve the variance explained by first 5 PCAs. 
 
-
 ## Classification report
 
-Note that we dropped class '0' (likely covers the areas that not meant to be classified), based on a preliminary data analysis of the raw dataset we have also dropped other sparsely covered with data classes (e.g. classes 1,7 and 9, where there were too few samples). <br> 
+Note that we dropped class '0' (likely covers the areas that not meant to be classified), based on a 
+preliminary data analysis of the raw dataset we have also dropped other sparsely covered with data classes 
+(e.g. classes 1,7 and 9, where there were too few samples). <br> 
 The modified dataset is then standardized, fitted, transformed and tested with different classification methods. <br>
 ![Alt text](accuracies_kpca.png) <br>
 **Figure 8.** Accuracy performance of the different methods for classification of the land surface in the "Indian Pines" dataset. 
 
-Overall, the Support Vector Classifier (SVC) with PCA appears to be the best-performing model among all tested, achieving the highest accuracy (83.3%) and balanced class-wise metrics. Random Forest (RF) models also perform well across various configurations. Logistic regression models show moderate performance, and the choice between them might depend on specific considerations, such as interpretability and computational efficiency.
+Overall, the Support Vector Classifier (SVC) with PCA appears to be the best-performing model among all tested, 
+achieving the highest accuracy (83.3%) and balanced class-wise metrics. Random Forest (RF) models also perform 
+well across various configurations. Logistic regression models show moderate performance, and the choice between 
+them might depend on specific considerations, such as interpretability and computational efficiency.
 
-
-It is aslo importrant to notice that additional projection of the PC transformed data into LDs space gives additional almost 5% of the accuracy for the Random Forest classification, while for the SVC method it decreases accuracy (only 2% decrease).<br>
+It is aslo importrant to notice that additional projection of the KPC transformed data into LDs space gives 
+additional almost 5% of the accuracy for the Random Forest classification, while for the SVC method it decreases 
+accuracy (only 2% decrease).<br>
 
 The worst performing method od GNB, it gives 70% of accurace for all tested configurations of PCA and LDA. 
 
@@ -178,21 +206,23 @@ Precision, recall, F1-score, and support are metrics for evaluations of the perf
 These metrics are derived from the confusion matrix, which summarizes the performance of a classification algorithm. 
 
 _Precision:_
-Precision is a positive predictive value, calculated as the ratio of true positive predictions to the sum of true positives and false positives.
+Precision is a positive predictive value, calculated as the ratio of true positive predictions to the sum of 
+true positives and false positives.
 High precision indicates model predicting a positive class, that is likely to be correct.
 
 _Recall:_
-Recall is a sensitivity or true positive rate, measures the ability of the model to capture all the positive instances. 
-It is calculated as the ratio of true positives to the sum of true positives and false negatives.
+Recall is a sensitivity or true positive rate, measures the ability of the model to capture all the positive
+instances. It is calculated as the ratio of true positives to the sum of true positives and false negatives.
 High recall indicates that the model is effective at identifying most of the positive instances.
 
 _F1-Score:_
-The F1-score is the harmonic mean of precision and recall. It provides a balance between precision and recall, it is useful when there is an uneven class distribution.
-The F1-score ranges from 0 to 1, where a higher value indicates better overall performance.
+The F1-score is the harmonic mean of precision and recall. It provides a balance between precision and recall, 
+it is useful when there is an uneven class distribution.The F1-score ranges from 0 to 1, where a higher value 
+indicates better overall performance.
 
 _Support:_
-Support represents the number of actual occurrences of the class in the specified dataset. It is the number of trues for each class.
-Support is not a measure of the model's performance but rather provides context for the other metrics.
+Support represents the number of actual occurrences of the class in the specified dataset. It is the number of 
+trues for each class. Support is not a measure of the model's performance but rather provides context for the other metrics.
 
 All these metrics calculated from Confusion matrix, which is allows to evaluate the performance of a classification models. 
 In the confusion matrix we see the predictions made by a model on a dataset and comparision of them to the actual labels. 
@@ -227,28 +257,22 @@ _False Negatives (FN):_ Incorrect prediction of the negative class when the true
 **Figure 9.** Calculated metrics of the performance of classification models for all method in this study. 
 
 
+## Examples of Confusion matrices for different Models
+
 ### Random Forest
 
 
 ### Logistic Regression (LogR)
 
-For tge logistic regression we run the kernel PCA. 
-Principal Component Analysis (PCA) and Kernel Principal Component Analysis (Kernel PCA) are both dimensionality 
-reduction techniques. The main difference betweem those two methods is that the Kernel PCA allows for nonlinear dimensionality reduction.
-It is particularly useful when dealing with data that has nonlinear relationships, as it can capture more complex patterns. 
-In this particular case we choose the kernel with radial basis function (RBF).
 
+### Support Vector Classification (SVC) - Best performing
 
-### Support Vector Classification (SVC)
-
-ADD CONFISION MATRIX AS THE BEST PERFROMING 
 ![Alt text](img/Confusion_Matrix/Target_PCA_020_SVC_Confusion_Matrix.png) <br>
 
-### Gaussian Naive Bayes (Gaussian NB)
+### Gaussian Naive Bayes (Gaussian NB) - Worst performing
 
 ![Alt text](img/Confusion_Matrix/Target_PCA_020_GNB_Confusion_Matrix.png)<br>
 
-ADD CONFISION MATRIX AS THE WORST PERFROMING 
 
 
 
