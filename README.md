@@ -252,26 +252,20 @@ _False Negatives (FN):_ Incorrect prediction of the negative class when the true
    F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
 
 
-
-![Alt text](accuracies_kpca_metrics.png)<br>
-**Figure 9.** Calculated metrics of the performance of classification models for all method in this study. 
+![Alt text](precision.png)<br>
+**Figure 9.** Calculated precision of classification models for all classes of the land (13 "targets"). 
 
 
 ## Examples of Confusion matrices for different Models
 
 ### Random Forest
-
-
+![Alt text](img/Confusion_Matrix/Target_KPCA_042_LDA_012_RF_Confusion_Matrix.png) 
 ### Logistic Regression (LogR)
-
-
+![Alt text](img/Confusion_Matrix/Target_KPCA_042_LDA_012_LogR_Confusion_Matrix.png) 
 ### Support Vector Classification (SVC) - Best performing
-
-![Alt text](img/Confusion_Matrix/Target_PCA_020_SVC_Confusion_Matrix.png) <br>
-
+![Alt text](img/Confusion_Matrix/Target_PCA_020_SVC_Confusion_Matrix.png) 
 ### Gaussian Naive Bayes (Gaussian NB) - Worst performing
-
-![Alt text](img/Confusion_Matrix/Target_PCA_020_GNB_Confusion_Matrix.png)<br>
+![Alt text](img/Confusion_Matrix/Target_PCA_020_GNB_Confusion_Matrix.png)
 
 
 
