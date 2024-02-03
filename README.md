@@ -53,11 +53,10 @@ Hyperspectral data provide a lot of information for the remote discrimination of
 
 The goal of the group assignmnet was to explore machine learning tools to analyze hyperspectral images of Indian pine fields to classify land surfaces according to the groud truth proveded. <br>
 
-
 The dataset consists of 200 satellite images of the same area, each corresponds to the one spectral band of the remote sensor. We expect different types of the land surface 
 to have a different reflectivity among those 200 bands. We will make at attempt to classify land types according to their representation on images in different bands. <br>
 
-We also have a "reference": the images that contains "target": classified patters of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
+We also have a "reference": the image that contains "target": classified patters of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
 Assuming we trained our model on this dataset, e.g. managed to predic the type of the land surface on the satellte imagery this can further be applied
 for the classification of the same 200 bands on the satellite imagery for the other areas. <br>
 
@@ -198,7 +197,7 @@ It is aslo importrant to notice that additional projection of the KPC transforme
 additional almost 5% of the accuracy for the Random Forest classification, while for the SVC method it decreases 
 accuracy (only 2% decrease).<br>
 
-The worst performing method od GNB, it gives 70% of accurace for all tested configurations of PCA and LDA. 
+The worst performing method od GNB, it gives around 60% of accuracy for all tested configurations of KPCA and LDA. 
 
 ### Metrics of performance 
 
@@ -255,6 +254,14 @@ _False Negatives (FN):_ Incorrect prediction of the negative class when the true
 ![Alt text](precision.png)<br>
 **Figure 9.** Calculated precision of classification models for all classes of the land (13 "targets"). 
 
+Overall model "Target_KPCA_020_LDA_012_GNB" shows high precision across most classes.
+Class 5 has consistently high precision across all models.
+For the recall class 5 again stands out with high recall across all models.
+Model "Target_KPCA_020_LDA_012_RF" has generally high recall for most classes.
+Similar to precision and recall, Class 5 maintains a high F1-Score across models.
+Model "Target_PCA_042_LDA_012_GNB" shows strong performance in terms of F1-Score.
+Models vary in their performance across different classes. Class 5 appears to be consistently well-predicted
+across models.
 
 ## Examples of Confusion matrices for different Models
 
