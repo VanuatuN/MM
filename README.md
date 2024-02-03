@@ -270,9 +270,9 @@ across models.
 ### Logistic Regression (LogR)
 ![Alt text](img/Confusion_Matrix/Target_KPCA_042_LDA_012_LogR_Confusion_Matrix.png) 
 ### Support Vector Classification (SVC) - Best performing
-![Alt text](img/Confusion_Matrix/Target_PCA_020_SVC_Confusion_Matrix.png) 
+![Alt text](img/Confusion_Matrix/Target_KPCA_020_LDA_012_SVC_Confusion_Matrix.png) 
 ### Gaussian Naive Bayes (Gaussian NB) - Worst performing
-![Alt text](img/Confusion_Matrix/Target_PCA_020_GNB_Confusion_Matrix.png)
+![Alt text](img/Confusion_Matrix/Target_KPCA_020_GNB_Confusion_Matrix.png)
 
 
 
