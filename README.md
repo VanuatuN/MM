@@ -51,61 +51,61 @@ Generally, our script provides insights into the classification performance of d
  
 Hyperspectral data provide a lot of information for the remote discrimination of ground truth, however, since spectral dimensions are usually many, the possibility of information redundancy is presented. Data analysis and interpretation of hyperspectral images can also be a challenge. <br>
 
-The goal of the group assignmnet was to explore machine learning tools to analyze hyperspectral images of Indian pine fields to classify land surfaces according to the groud truth proveded. <br>
+The goal of the group assignment was to explore machine learning tools to analyze hyperspectral images of Indian pine fields to classify land surfaces according to the groud truth provided. <br>
 
 The dataset consists of 200 satellite images of the same area, each corresponds to the one spectral band of the remote sensor. We expect different types of the land surface 
-to have a different reflectivity among those 200 bands. We will make at attempt to classify land types according to their representation on images in different bands. <br>
+to have a different reflectivity among those 200 bands. We will make an attempt to classify land types according to their representation on images in different bands. <br>
 
-We also have a "reference": the image that contains "target": classified patters of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
-Assuming we trained our model on this dataset, e.g. managed to predic the type of the land surface on the satellte imagery this can further be applied
+We also have a "reference": the image that contains "target", classified patterns of the surface, e.g. 'Corn-notill', 'Corn', etc. <br>
+Assuming we trained our model on this dataset, e.g. managed to predict the type of the land surface on the satellte imagery, the model can be further applied
 for the classification of the same 200 bands on the satellite imagery for the other areas. <br>
 
 ## Exploratory Data Analysis
 
 _Important note_: All 0 values and values of the target that covered sparsely by the data were removed, or classified as NaNs. The sparsely covered
-targets are: 0, 1, 7 and 9. In the end we analyse tagets: 2, 3, 4, 5, 6, 8, 10-16. 13 in total, each for one type of the land. 
+targets are: 0, 1, 7 and 9. In the end we analyse targets: 2, 3, 4, 5, 6, 8, 10-16. 13 in total, each for one type of the land. 
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bb881288-5bcd-4b7d-a19e-1010b8c00b24)
 **Figure 1.** Binned distriburion of the image cells with different features (e.g. land types).
 
 - **Principal Components Analysis** <br>
 
-We first expore the data by plotting images for random bands. There are several patterns that can be observed from this simple procedure, this suggest 
+We first explore the data by plotting images for random bands. There are several patterns that can be observed from this simple procedure: this suggests that 
 some land types are clearly distinguishable in different satellite bands.
 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/2e8cf3a1-93c0-4b81-a38f-46eaa62ec35b)
 
 **Figure 2.** Example of the satellite images in different spectral bands. 
 
-As a first step we apply a Pricipal Components decomposition to the 200 matrixes of the size 145x145 to see
-whether PCs are (i) distiguashable between each other and (ii) how many PCs we need to describe most of the varibility
-in the dataset. These anlysis allows to see the clusters in the data and quantify the measure of their
-"separation" to make further descision for the methods of analysis. <br>
+As a first step we apply a Principal Components decomposition to the 200 matrixes of the size 145x145 to see
+whether PCs are (i) distiguishable between each other and (ii) how many PCs we need to describe most of the variability
+in the dataset. This analysis allows to see the clusters in the data and quantify the measure of their
+"separation" to make further decisions for the methods of analysis. <br>
 
-The PCs analysis shows that first 5 PCs expalin more than 92% of the total variability in the dataset.
+The PCs analysis shows that first 5 PCs explain more than 92% of the total variability in the dataset.
 While <br>
 
 PC 1 explains 0.68 % <br>
 PC 2 explains 0.19 % <br>
 
 There is also a clear clustering of the data points in PCs space (Figure 2), suggesting that data clusters are
-separated and can be further analysed succesfully with machine learning methods. 
+separated and can be further analyzed successfully with machine learning methods. 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/bdf28b5c-0a2c-4b23-94bf-53932a34bddf)
 **Figure 3.** First 3 PCAs plotted in a 3D space. <br>
 
-The next step was to check whether the reconstucted images only applying first 10 PCs would
-reflect the main features to be carptured by machine learning techniques. Figure 3 demonstrates
+The next step was to check whether the reconstructed images only applying first 10 PCs would
+reflect the main features to be captured by machine learning techniques. Figure 3 demonstrates
 those reconstructed images and we conclude that images are well reflecting the land features
 we want to classify. 
 ![image](https://github.com/VanuatuN/MM/assets/23639320/5ac60da7-c650-4483-96f6-c79b475088dc)
-**Figure 4.** Reconstructed images (applying inverse transform with first 10 PCs) of for the different bands. <br>
+**Figure 4.** Reconstructed images (applying inverse transform with first 10 PCs) of the different bands. <br>
 
 - **Kernel Principal Components Analysis** <br>
 
-We did all final runs and provide analytic report with KPCA methond for data decomposition,
-it demostrated better performance in comparison to PCA. Principal Component Analysis (PCA) 
+We did all the final runs and provide analytic report with KPCA method for data decomposition,
+which demostrated better performance in comparison to PCA. Principal Component Analysis (PCA) 
 and Kernel Principal Component Analysis (Kernel PCA) are both dimensionality 
-reduction techniques. The main difference betweem those two methods is that the Kernel PCA 
+reduction techniques. The main difference between those two methods is that the Kernel PCA 
 allows for nonlinear dimensionality reduction.
 It is particularly useful when dealing with data that has nonlinear relationships, 
 as it can capture more complex patterns. 
@@ -113,17 +113,17 @@ In this particular case we choose the kernel with radial basis function (RBF).
 
 - **Remarks** <br>
 
-Exploratory Data analysis of our choice focused on, first understanding the dataset probing 
+Exploratory Data analysis of our choice focused on first understanding the dataset, and probing 
 the overall description of the dataset. Pixel sizes (data) contained in 200 bands of image 
 were analyzed for the presence of redundancy of the data they all held.<br> 
 
 
-This was achieved through the assesment of interband correlation. Of the first 15 bands, band1 
+This was achieved through the assessment of interband correlation. Of the first 15 bands, band1 
 had the weakest correlation with the remainig bands (bands2-band15), showing a very strong correlation 
 between band2 to 15 with coefficients ranging between 0.7 to 0.9 in most combinations. <br>
 
 
-The correlation coefficients of the bands with the class (specie) column was also analyzed.
+The correlation coefficients of the bands with the class (species) column was also analyzed.
 The highest correlation coefficient was estimated to be ~ 0.23. Selected Bands with Correlation
 Coefficient >= 0.238 with the Class (Specie) Column were as follows:<br>
 
@@ -167,7 +167,7 @@ Stochastic Neighbor Embedding (t-SNE). <br>
 ![Alt text](tSNE_raw.png) <br>
 **Figure 6b.**
 
-LDA a technique to reduce the dimensionality and help classification, by finding the linear combinations 
+LDA is a technique to reduce the dimensionality and help classification, by finding the linear combinations 
 of features that best separate the different classes in the dataset.
 It is best employed before the application of a classificaton algorithm, by maximizing the distance between
 the means of different classes and minimizing the spread within each class, thus enhancing the discriminatory
@@ -193,11 +193,11 @@ achieving the highest accuracy (83.3%) and balanced class-wise metrics. Random F
 well across various configurations. Logistic regression models show moderate performance, and the choice between 
 them might depend on specific considerations, such as interpretability and computational efficiency.
 
-It is aslo importrant to notice that additional projection of the KPC transformed data into LDs space gives 
+It is also important to notice that additional projection of the KPC transformed data into LDs space gives 
 additional almost 5% of the accuracy for the Random Forest classification, while for the SVC method it decreases 
 accuracy (only 2% decrease).<br>
 
-The worst performing method od GNB, it gives around 60% of accuracy for all tested configurations of KPCA and LDA. 
+The worst performing method is GNB, which gives around 60% of accuracy for all tested configurations of KPCA and LDA. 
 
 ### Metrics of performance 
 
@@ -210,21 +210,21 @@ true positives and false positives.
 High precision indicates model predicting a positive class, that is likely to be correct.
 
 _Recall:_
-Recall is a sensitivity or true positive rate, measures the ability of the model to capture all the positive
+Recall is a sensitivity or true positive rate, that measures the ability of the model to capture all the positive
 instances. It is calculated as the ratio of true positives to the sum of true positives and false negatives.
 High recall indicates that the model is effective at identifying most of the positive instances.
 
 _F1-Score:_
 The F1-score is the harmonic mean of precision and recall. It provides a balance between precision and recall, 
-it is useful when there is an uneven class distribution.The F1-score ranges from 0 to 1, where a higher value 
+and it is useful when there is an uneven class distribution. The F1-score ranges from 0 to 1, where a higher value 
 indicates better overall performance.
 
 _Support:_
 Support represents the number of actual occurrences of the class in the specified dataset. It is the number of 
 trues for each class. Support is not a measure of the model's performance but rather provides context for the other metrics.
 
-All these metrics calculated from Confusion matrix, which is allows to evaluate the performance of a classification models. 
-In the confusion matrix we see the predictions made by a model on a dataset and comparision of them to the actual labels. 
+All these metrics are calculated from the Confusion matrix, which allows to evaluate the performance of a classification models. 
+In the confusion matrix we see the predictions made by a model on a dataset and comparison of them to the actual labels. 
 It operates with true positives (TP), true negatives (TN), false positives (FP), and false negatives (FN) values.
 
 _True Positives (TP):_ Correct prediction of the positive class.
