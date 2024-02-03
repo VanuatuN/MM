@@ -1,4 +1,4 @@
-Target_PCA_042_LDA_012_LogR
+Target_KPCA_042_LDA_012_LogR
 Accuracy: 74.43%
               precision    recall  f1-score   support
 
